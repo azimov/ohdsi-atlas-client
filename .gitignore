@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+
+# R
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+*.Rcheck/
+*.tar.gz
+r/.Rproj.user/
+r/.quarto/
+docs/_site/
+_site/
+pkgdown/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# Local credentials and test output
+.credentials.json
+*.key
+*.pem
+artifacts/
+coverage.xml

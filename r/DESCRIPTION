@@ -1,0 +1,43 @@
+Package: Atlas3
+Type: Package
+Title: Client for OHDSI ATLAS 3.0 and WebAPI 3.0
+Version: 0.1.0
+Authors@R:
+    person("Jamie", "Gilbert", email = "gilbert@ohdsi.org",
+           role = c("aut", "cre"))
+Description: A modern client for the OHDSI ATLAS 3.0 and WebAPI 3.0 REST
+    interface. Discovers a deployment from its URL, negotiates the WebAPI
+    version, authenticates with personal API keys or database login, and
+    provides typed access to sources, vocabularies, concept sets, cohort
+    definitions, cohort definition sets, CDM results, jobs, and analysis
+    resources. Cohort definition sets are portable JSON or ZIP bundles
+    containing cohort expressions and their embedded concept sets. The
+    package targets ATLAS 3.0 and newer only.
+License: Apache License 2.0
+Encoding: UTF-8
+Language: en-US
+Depends:
+    R (>= 4.1.0)
+Imports:
+    checkmate,
+    digest,
+    httr2 (>= 1.0.0),
+    jsonlite,
+    R6,
+    rlang,
+    tools,
+    utils,
+    zip
+Suggests:
+    askpass,
+    covr,
+    keyring,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+URL: https://github.com/OHDSI/Atlas3Clients
+BugReports: https://github.com/OHDSI/Atlas3Clients/issues
+VignetteBuilder: knitr

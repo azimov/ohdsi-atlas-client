@@ -1,0 +1,6007 @@
+{
+  "format": "atlas3.endpoint-catalog",
+  "formatVersion": "1.0",
+  "webApiVersion": "3.0.0",
+  "generatedFrom": "OHDSI WebAPI 3.0 source (master) and live /WebAPI verification",
+  "endpointCount": 344,
+  "endpoints": [
+    {
+      "operationId": "auth.getProviders",
+      "method": "GET",
+      "path": "/auth/providers",
+      "group": "auth",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "List<AuthProviderInfo>",
+      "source": "auth/AuthProviderService.java"
+    },
+    {
+      "operationId": "cache.getCacheInfoList",
+      "method": "GET",
+      "path": "/cache",
+      "group": "cache",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "ResponseEntity<List<CacheInfo>>",
+      "source": "mvc/controller/CacheMvcController.java"
+    },
+    {
+      "operationId": "cache.clearAll",
+      "method": "GET",
+      "path": "/cache/clear",
+      "group": "cache",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "ResponseEntity<ClearCacheResult>",
+      "source": "mvc/controller/CacheMvcController.java"
+    },
+    {
+      "operationId": "cdmresults.clearCache",
+      "method": "POST",
+      "path": "/cdmresults/clearCache",
+      "group": "cdmresults",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "void",
+      "source": "service/CDMResultsService.java"
+    },
+    {
+      "operationId": "cdmresults.clearCacheForSource",
+      "method": "POST",
+      "path": "/cdmresults/{sourceKey}/clearCache",
+      "group": "cdmresults",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "service/CDMResultsService.java"
+    },
+    {
+      "operationId": "cdmresults.getConceptRecordCount",
+      "method": "POST",
+      "path": "/cdmresults/{sourceKey}/conceptRecordCount",
+      "group": "cdmresults",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "identifiers",
+          "in": "body",
+          "type": "List<Integer>"
+        }
+      ],
+      "hasBody": true,
+      "returns": "List<SimpleEntry<Integer, List<Long>>>",
+      "source": "service/CDMResultsService.java"
+    },
+    {
+      "operationId": "cdmresults.getDashboard",
+      "method": "GET",
+      "path": "/cdmresults/{sourceKey}/dashboard",
+      "group": "cdmresults",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CDMDashboard",
+      "source": "service/CDMResultsService.java"
+    },
+    {
+      "operationId": "cdmresults.getDataDensity",
+      "method": "GET",
+      "path": "/cdmresults/{sourceKey}/datadensity",
+      "group": "cdmresults",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CDMDataDensity",
+      "source": "service/CDMResultsService.java"
+    },
+    {
+      "operationId": "cdmresults.getDeath",
+      "method": "GET",
+      "path": "/cdmresults/{sourceKey}/death",
+      "group": "cdmresults",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CDMDeath",
+      "source": "service/CDMResultsService.java"
+    },
+    {
+      "operationId": "cdmresults.getObservationPeriod",
+      "method": "GET",
+      "path": "/cdmresults/{sourceKey}/observationPeriod",
+      "group": "cdmresults",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CDMObservationPeriod",
+      "source": "service/CDMResultsService.java"
+    },
+    {
+      "operationId": "cdmresults.getPerson",
+      "method": "GET",
+      "path": "/cdmresults/{sourceKey}/person",
+      "group": "cdmresults",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CDMPersonSummary",
+      "source": "service/CDMResultsService.java"
+    },
+    {
+      "operationId": "cdmresults.refreshCache",
+      "method": "GET",
+      "path": "/cdmresults/{sourceKey}/refreshCache",
+      "group": "cdmresults",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "JobExecutionResource",
+      "source": "service/CDMResultsService.java"
+    },
+    {
+      "operationId": "cdmresults.warmCache",
+      "method": "GET",
+      "path": "/cdmresults/{sourceKey}/warmCache",
+      "group": "cdmresults",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "JobExecutionResource",
+      "source": "service/CDMResultsService.java"
+    },
+    {
+      "operationId": "cdmresults.getTreemap",
+      "method": "GET",
+      "path": "/cdmresults/{sourceKey}/{domain}",
+      "group": "cdmresults",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "domain",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ArrayNode",
+      "source": "service/CDMResultsService.java"
+    },
+    {
+      "operationId": "cdmresults.getDrilldown",
+      "method": "GET",
+      "path": "/cdmresults/{sourceKey}/{domain}/{conceptId}",
+      "group": "cdmresults",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "domain",
+          "in": "path"
+        },
+        {
+          "name": "conceptId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "JsonNode",
+      "source": "service/CDMResultsService.java"
+    },
+    {
+      "operationId": "cohort-characterization.list",
+      "method": "GET",
+      "path": "/cohort-characterization",
+      "group": "cohort-characterization",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "Page<CcShortDTO>",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.create",
+      "method": "POST",
+      "path": "/cohort-characterization",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "CohortCharacterizationDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "CohortCharacterizationDTO",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.listByTags",
+      "method": "POST",
+      "path": "/cohort-characterization/byTags",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "requestDTO",
+          "in": "body",
+          "type": "TagNameListRequestDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "List<CcShortDTO>",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.runDiagnostics",
+      "method": "POST",
+      "path": "/cohort-characterization/check",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "characterizationDTO",
+          "in": "body",
+          "type": "CohortCharacterizationDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "CheckResult",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.listDesign",
+      "method": "GET",
+      "path": "/cohort-characterization/design",
+      "group": "cohort-characterization",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "Page<CohortCharacterizationDTO>",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.deleteGeneration",
+      "method": "DELETE",
+      "path": "/cohort-characterization/generation/{generationId}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "generationId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "hasBody": false,
+      "returns": null,
+      "source": "CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.getGeneration",
+      "method": "GET",
+      "path": "/cohort-characterization/generation/{generationId}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "generationId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "hasBody": false,
+      "returns": null,
+      "source": "CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.getGenerationDesign",
+      "method": "GET",
+      "path": "/cohort-characterization/generation/{generationId}/design",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "generationId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "hasBody": false,
+      "returns": null,
+      "source": "CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.getPrevalenceStat",
+      "method": "GET",
+      "path": "/cohort-characterization/generation/{generationId}/explore/prevalence/{analysisId}/{cohortId}/{covariateId}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "generationId",
+          "in": "path",
+          "required": true
+        },
+        {
+          "name": "analysisId",
+          "in": "path",
+          "required": true
+        },
+        {
+          "name": "cohortId",
+          "in": "path",
+          "required": true
+        },
+        {
+          "name": "covariateId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "hasBody": false,
+      "returns": null,
+      "source": "CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.getGenerationsResults",
+      "method": "GET",
+      "path": "/cohort-characterization/generation/{generationId}/result",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "generationId",
+          "in": "path",
+          "required": true
+        },
+        {
+          "name": "thresholdLevel",
+          "in": "query",
+          "required": false,
+          "default": "0.01"
+        }
+      ],
+      "hasBody": false,
+      "returns": null,
+      "source": "CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.getGenerationsResultsPost",
+      "method": "POST",
+      "path": "/cohort-characterization/generation/{generationId}/result",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "generationId",
+          "in": "path",
+          "required": true
+        },
+        {
+          "name": "params",
+          "in": "body",
+          "type": "ExportExecutionResultRequest"
+        }
+      ],
+      "hasBody": true,
+      "returns": null,
+      "source": "CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.getGenerationsResultsCount",
+      "method": "GET",
+      "path": "/cohort-characterization/generation/{generationId}/result/count",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "generationId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "hasBody": false,
+      "returns": null,
+      "source": "CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.exportGenerationsResults",
+      "method": "POST",
+      "path": "/cohort-characterization/generation/{generationId}/result/export",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "generationId",
+          "in": "path",
+          "required": true
+        },
+        {
+          "name": "params",
+          "in": "body",
+          "type": "ExportExecutionResultRequest"
+        }
+      ],
+      "hasBody": true,
+      "returns": "byte[]",
+      "source": "CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.getGenerationTemporalResults",
+      "method": "GET",
+      "path": "/cohort-characterization/generation/{generationId}/temporalresult",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "generationId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "hasBody": false,
+      "returns": null,
+      "source": "CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.doImport",
+      "method": "POST",
+      "path": "/cohort-characterization/import",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "CcExportDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "CohortCharacterizationDTO",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.deleteCc",
+      "method": "DELETE",
+      "path": "/cohort-characterization/{id}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.get",
+      "method": "GET",
+      "path": "/cohort-characterization/{id}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CcShortDTO",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.copy",
+      "method": "POST",
+      "path": "/cohort-characterization/{id}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CohortCharacterizationDTO",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.update",
+      "method": "PUT",
+      "path": "/cohort-characterization/{id}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "CohortCharacterizationDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "CohortCharacterizationDTO",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.getDesign",
+      "method": "GET",
+      "path": "/cohort-characterization/{id}/design",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CohortCharacterizationDTO",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.getCountCcWithSameName",
+      "method": "GET",
+      "path": "/cohort-characterization/{id}/exists",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": false
+        },
+        {
+          "name": "name",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "int",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.export",
+      "method": "GET",
+      "path": "/cohort-characterization/{id}/export",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "String",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.exportConceptSets",
+      "method": "GET",
+      "path": "/cohort-characterization/{id}/export/conceptset",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<StreamingResponseBody>",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.getGenerationList",
+      "method": "GET",
+      "path": "/cohort-characterization/{id}/generation",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<CommonGenerationDTO>",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.cancelGeneration",
+      "method": "DELETE",
+      "path": "/cohort-characterization/{id}/generation/{sourceKey}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<Void>",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.generate",
+      "method": "POST",
+      "path": "/cohort-characterization/{id}/generation/{sourceKey}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "JobExecutionResource",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.assignPermissionProtectedTag",
+      "method": "POST",
+      "path": "/cohort-characterization/{id}/protectedtag",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "body",
+          "type": "int"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.unassignPermissionProtectedTag",
+      "method": "DELETE",
+      "path": "/cohort-characterization/{id}/protectedtag/{tagId}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.assignTag",
+      "method": "POST",
+      "path": "/cohort-characterization/{id}/tag",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "body",
+          "type": "int"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.unassignTag",
+      "method": "DELETE",
+      "path": "/cohort-characterization/{id}/tag/{tagId}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.getVersions",
+      "method": "GET",
+      "path": "/cohort-characterization/{id}/version",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<VersionDTO>",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.deleteVersion",
+      "method": "DELETE",
+      "path": "/cohort-characterization/{id}/version/{version}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.getVersion",
+      "method": "GET",
+      "path": "/cohort-characterization/{id}/version/{version}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CcVersionFullDTO",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.updateVersion",
+      "method": "PUT",
+      "path": "/cohort-characterization/{id}/version/{version}",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        },
+        {
+          "name": "updateDTO",
+          "in": "body",
+          "type": "VersionUpdateDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "VersionDTO",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohort-characterization.copyAssetFromVersion",
+      "method": "PUT",
+      "path": "/cohort-characterization/{id}/version/{version}/createAsset",
+      "group": "cohort-characterization",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CohortCharacterizationDTO",
+      "source": "cohortcharacterization/CcController.java"
+    },
+    {
+      "operationId": "cohortdefinition.getCohortDefinitionList",
+      "method": "GET",
+      "path": "/cohortdefinition",
+      "group": "cohortdefinition",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "List<CohortMetadataDTO>",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.createCohortDefinition",
+      "method": "POST",
+      "path": "/cohortdefinition",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "CohortDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "CohortDTO",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.listByTags",
+      "method": "POST",
+      "path": "/cohortdefinition/byTags",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "requestDTO",
+          "in": "body",
+          "type": "TagNameListRequestDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "List<CohortDTO>",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.runDiagnostics",
+      "method": "POST",
+      "path": "/cohortdefinition/check",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "expression",
+          "in": "body",
+          "type": "CohortExpression"
+        }
+      ],
+      "hasBody": true,
+      "returns": "CheckResultDTO",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.runDiagnosticsWithTags",
+      "method": "POST",
+      "path": "/cohortdefinition/checkV2",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "cohortDTO",
+          "in": "body",
+          "type": "CohortDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "CheckResult",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.cohortPrintFriendly",
+      "method": "POST",
+      "path": "/cohortdefinition/printfriendly/cohort",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "expression",
+          "in": "body",
+          "type": "CohortExpression"
+        },
+        {
+          "name": "format",
+          "in": "query",
+          "default": "html"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ResponseEntity",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.conceptSetListPrintFriendly",
+      "method": "POST",
+      "path": "/cohortdefinition/printfriendly/conceptsets",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "conceptSetList",
+          "in": "body",
+          "type": "List<ConceptSet>"
+        },
+        {
+          "name": "format",
+          "in": "query",
+          "default": "html"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ResponseEntity",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.generateSql",
+      "method": "POST",
+      "path": "/cohortdefinition/sql",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "request",
+          "in": "body",
+          "type": "GenerateSqlRequest"
+        }
+      ],
+      "hasBody": true,
+      "returns": "GenerateSqlResult",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.delete",
+      "method": "DELETE",
+      "path": "/cohortdefinition/{id}",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.getCohortDefinitionRaw",
+      "method": "GET",
+      "path": "/cohortdefinition/{id}",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CohortRawDTO",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.saveCohortDefinition",
+      "method": "PUT",
+      "path": "/cohortdefinition/{id}",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "def",
+          "in": "body",
+          "type": "CohortDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "CohortDTO",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.cancelGenerateCohort",
+      "method": "GET",
+      "path": "/cohortdefinition/{id}/cancel/{sourceKey}",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.copy",
+      "method": "GET",
+      "path": "/cohortdefinition/{id}/copy",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CohortDTO",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.getCountCDefWithSameName",
+      "method": "GET",
+      "path": "/cohortdefinition/{id}/exists",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "name",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "int",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.exportConceptSets",
+      "method": "GET",
+      "path": "/cohortdefinition/{id}/export/conceptset",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody>",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.generateCohort",
+      "method": "GET",
+      "path": "/cohortdefinition/{id}/generate/{sourceKey}",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "demographic",
+          "in": "query",
+          "default": "false"
+        }
+      ],
+      "hasBody": false,
+      "returns": "JobExecutionResource",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.getInfo",
+      "method": "GET",
+      "path": "/cohortdefinition/{id}/info",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<CohortGenerationInfoDTO>",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.assignPermissionProtectedTag",
+      "method": "POST",
+      "path": "/cohortdefinition/{id}/protectedtag",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "body",
+          "type": "int"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.unassignPermissionProtectedTag",
+      "method": "DELETE",
+      "path": "/cohortdefinition/{id}/protectedtag/{tagId}",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.getDemographicsReport",
+      "method": "GET",
+      "path": "/cohortdefinition/{id}/report/{sourceKey}/demographics",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "ccGenerateId",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<Report>",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.getInclusionRuleReport",
+      "method": "GET",
+      "path": "/cohortdefinition/{id}/report/{sourceKey}/inclusion",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "mode",
+          "in": "query",
+          "default": "0"
+        }
+      ],
+      "hasBody": false,
+      "returns": "InclusionRuleReport",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.assignTag",
+      "method": "POST",
+      "path": "/cohortdefinition/{id}/tag",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "body",
+          "type": "int"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.unassignTag",
+      "method": "DELETE",
+      "path": "/cohortdefinition/{id}/tag/{tagId}",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.getVersions",
+      "method": "GET",
+      "path": "/cohortdefinition/{id}/version",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<VersionDTO>",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.deleteVersion",
+      "method": "DELETE",
+      "path": "/cohortdefinition/{id}/version/{version}",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.getVersion",
+      "method": "GET",
+      "path": "/cohortdefinition/{id}/version/{version}",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CohortVersionFullDTO",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.updateVersion",
+      "method": "PUT",
+      "path": "/cohortdefinition/{id}/version/{version}",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        },
+        {
+          "name": "updateDTO",
+          "in": "body",
+          "type": "VersionUpdateDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "VersionDTO",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortdefinition.copyAssetFromVersion",
+      "method": "PUT",
+      "path": "/cohortdefinition/{id}/version/{version}/createAsset",
+      "group": "cohortdefinition",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CohortDTO",
+      "source": "cohortdefinition/CohortDefinitionService.java"
+    },
+    {
+      "operationId": "cohortsample.hasSamples",
+      "method": "GET",
+      "path": "/cohortsample/has-samples/{cohortDefinitionId}",
+      "group": "cohortsample",
+      "parameters": [
+        {
+          "name": "cohortDefinitionId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Map<String, Boolean>",
+      "source": "cohortdefinition/CohortSampleService.java"
+    },
+    {
+      "operationId": "cohortsample.hasSamplesForSource",
+      "method": "GET",
+      "path": "/cohortsample/has-samples/{cohortDefinitionId}/{sourceKey}",
+      "group": "cohortsample",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "cohortDefinitionId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Map<String, Boolean>",
+      "source": "cohortdefinition/CohortSampleService.java"
+    },
+    {
+      "operationId": "cohortsample.deleteCohortSamples",
+      "method": "DELETE",
+      "path": "/cohortsample/{cohortDefinitionId}/{sourceKey}",
+      "group": "cohortsample",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "cohortDefinitionId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<Void>",
+      "source": "cohortdefinition/CohortSampleService.java"
+    },
+    {
+      "operationId": "cohortsample.listCohortSamples",
+      "method": "GET",
+      "path": "/cohortsample/{cohortDefinitionId}/{sourceKey}",
+      "group": "cohortsample",
+      "parameters": [
+        {
+          "name": "cohortDefinitionId",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "CohortSampleListDTO",
+      "source": "cohortdefinition/CohortSampleService.java"
+    },
+    {
+      "operationId": "cohortsample.createCohortSample",
+      "method": "POST",
+      "path": "/cohortsample/{cohortDefinitionId}/{sourceKey}",
+      "group": "cohortsample",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "cohortDefinitionId",
+          "in": "path"
+        },
+        {
+          "name": "sampleParameters",
+          "in": "body",
+          "type": "SampleParametersDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "CohortSampleDTO",
+      "source": "cohortdefinition/CohortSampleService.java"
+    },
+    {
+      "operationId": "cohortsample.deleteCohortSample",
+      "method": "DELETE",
+      "path": "/cohortsample/{cohortDefinitionId}/{sourceKey}/{sampleId}",
+      "group": "cohortsample",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "cohortDefinitionId",
+          "in": "path"
+        },
+        {
+          "name": "sampleId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<Void>",
+      "source": "cohortdefinition/CohortSampleService.java"
+    },
+    {
+      "operationId": "cohortsample.getCohortSample",
+      "method": "GET",
+      "path": "/cohortsample/{cohortDefinitionId}/{sourceKey}/{sampleId}",
+      "group": "cohortsample",
+      "parameters": [
+        {
+          "name": "cohortDefinitionId",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "sampleId",
+          "in": "path"
+        },
+        {
+          "name": "fields",
+          "in": "query",
+          "default": ""
+        }
+      ],
+      "hasBody": false,
+      "returns": "CohortSampleDTO",
+      "source": "cohortdefinition/CohortSampleService.java"
+    },
+    {
+      "operationId": "cohortsample.refreshCohortSample",
+      "method": "POST",
+      "path": "/cohortsample/{cohortDefinitionId}/{sourceKey}/{sampleId}/refresh",
+      "group": "cohortsample",
+      "parameters": [
+        {
+          "name": "cohortDefinitionId",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "sampleId",
+          "in": "path"
+        },
+        {
+          "name": "fields",
+          "in": "query",
+          "default": ""
+        }
+      ],
+      "hasBody": false,
+      "returns": "CohortSampleDTO",
+      "source": "cohortdefinition/CohortSampleService.java"
+    },
+    {
+      "operationId": "conceptset.getConceptSets",
+      "method": "GET",
+      "path": "/conceptset",
+      "group": "conceptset",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "Collection<ConceptSetDTO>",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.createConceptSet",
+      "method": "POST",
+      "path": "/conceptset",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "conceptSetDTO",
+          "in": "body",
+          "type": "ConceptSetDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ConceptSetDTO",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.listByTags",
+      "method": "POST",
+      "path": "/conceptset/byTags",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "requestDTO",
+          "in": "body",
+          "type": "TagNameListRequestDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "List<ConceptSetDTO>",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.runDiagnostics",
+      "method": "POST",
+      "path": "/conceptset/check",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "conceptSetDTO",
+          "in": "body",
+          "type": "ConceptSetDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "CheckResult",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.copyAnnotations",
+      "method": "POST",
+      "path": "/conceptset/copy-annotations",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "copyAnnotationsRequest",
+          "in": "body",
+          "type": "CopyAnnotationsRequest"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.exportConceptSetList",
+      "method": "GET",
+      "path": "/conceptset/exportlist",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "conceptsets",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<byte[]>",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.deleteConceptSetAnnotation",
+      "method": "DELETE",
+      "path": "/conceptset/{conceptSetId}/annotation/{annotationId}",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "conceptSetId",
+          "in": "path"
+        },
+        {
+          "name": "annotationId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<Void>",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.deleteConceptSet",
+      "method": "DELETE",
+      "path": "/conceptset/{id}",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.getConceptSet",
+      "method": "GET",
+      "path": "/conceptset/{id}",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ConceptSetDTO",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.updateConceptSet",
+      "method": "PUT",
+      "path": "/conceptset/{id}",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "conceptSetDTO",
+          "in": "body",
+          "type": "ConceptSetDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ConceptSetDTO",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.getConceptSetAnnotation",
+      "method": "GET",
+      "path": "/conceptset/{id}/annotation",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<AnnotationDTO>",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.saveConceptSetAnnotation",
+      "method": "PUT",
+      "path": "/conceptset/{id}/annotation",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "request",
+          "in": "body",
+          "type": "SaveConceptSetAnnotationsRequest"
+        }
+      ],
+      "hasBody": true,
+      "returns": "boolean",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.getNameForCopy",
+      "method": "GET",
+      "path": "/conceptset/{id}/copy-name",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Map<String, String>",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.getCountCSetWithSameName",
+      "method": "GET",
+      "path": "/conceptset/{id}/exists",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "name",
+          "in": "query",
+          "required": false
+        }
+      ],
+      "hasBody": false,
+      "returns": "int",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.exportConceptSetToCSV",
+      "method": "GET",
+      "path": "/conceptset/{id}/export",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<byte[]>",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.getConceptSetExpressionById",
+      "method": "GET",
+      "path": "/conceptset/{id}/expression",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ConceptSetExpression",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.getConceptSetExpressionByIdAndSource",
+      "method": "GET",
+      "path": "/conceptset/{id}/expression/{sourceKey}",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ConceptSetExpression",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.getConceptSetGenerationInfo",
+      "method": "GET",
+      "path": "/conceptset/{id}/generationinfo",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<ConceptSetGenerationInfo>",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.getConceptSetItems",
+      "method": "GET",
+      "path": "/conceptset/{id}/items",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Iterable<ConceptSetItem>",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.saveConceptSetItems",
+      "method": "PUT",
+      "path": "/conceptset/{id}/items",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "items",
+          "in": "body",
+          "type": "ConceptSetItem[]"
+        }
+      ],
+      "hasBody": true,
+      "returns": "boolean",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.assignPermissionProtectedTag",
+      "method": "POST",
+      "path": "/conceptset/{id}/protectedtag",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "body",
+          "type": "int"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.unassignPermissionProtectedTag",
+      "method": "DELETE",
+      "path": "/conceptset/{id}/protectedtag/{tagId}",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.assignTag",
+      "method": "POST",
+      "path": "/conceptset/{id}/tag",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "body",
+          "type": "int"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.unassignTag",
+      "method": "DELETE",
+      "path": "/conceptset/{id}/tag/{tagId}",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.getVersions",
+      "method": "GET",
+      "path": "/conceptset/{id}/version",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<VersionDTO>",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.deleteVersion",
+      "method": "DELETE",
+      "path": "/conceptset/{id}/version/{version}",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.getVersion",
+      "method": "GET",
+      "path": "/conceptset/{id}/version/{version}",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ConceptSetVersionFullDTO",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.updateVersion",
+      "method": "PUT",
+      "path": "/conceptset/{id}/version/{version}",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        },
+        {
+          "name": "updateDTO",
+          "in": "body",
+          "type": "VersionUpdateDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "VersionDTO",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.copyAssetFromVersion",
+      "method": "PUT",
+      "path": "/conceptset/{id}/version/{version}/createAsset",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ConceptSetDTO",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.getConceptSetExpressionByVersion",
+      "method": "GET",
+      "path": "/conceptset/{id}/version/{version}/expression",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ConceptSetExpression",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.getConceptSetExpressionByVersionAndSource",
+      "method": "GET",
+      "path": "/conceptset/{id}/version/{version}/expression/{sourceKey}",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ConceptSetExpression",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "conceptset.getConceptSetExistsDeprecated",
+      "method": "GET",
+      "path": "/conceptset/{id}/{name}/exists",
+      "group": "conceptset",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "name",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<Collection<ConceptSet>>",
+      "source": "conceptset/ConceptSetService.java"
+    },
+    {
+      "operationId": "ddl.generateAchillesSQL",
+      "method": "GET",
+      "path": "/ddl/achilles",
+      "group": "ddl",
+      "parameters": [
+        {
+          "name": "dialect",
+          "in": "query",
+          "required": false
+        },
+        {
+          "name": "vocabSchema",
+          "in": "query",
+          "default": "vocab"
+        },
+        {
+          "name": "schema",
+          "in": "query",
+          "default": "results"
+        }
+      ],
+      "hasBody": false,
+      "returns": "String",
+      "source": "service/DDLService.java"
+    },
+    {
+      "operationId": "ddl.generateCemResultSQL",
+      "method": "GET",
+      "path": "/ddl/cemresults",
+      "group": "ddl",
+      "parameters": [
+        {
+          "name": "dialect",
+          "in": "query",
+          "required": false
+        },
+        {
+          "name": "schema",
+          "in": "query",
+          "default": "cemresults"
+        }
+      ],
+      "hasBody": false,
+      "returns": "String",
+      "source": "service/DDLService.java"
+    },
+    {
+      "operationId": "ddl.generateResultSQL",
+      "method": "GET",
+      "path": "/ddl/results",
+      "group": "ddl",
+      "parameters": [
+        {
+          "name": "dialect",
+          "in": "query",
+          "required": false
+        },
+        {
+          "name": "vocabSchema",
+          "in": "query",
+          "default": "vocab"
+        },
+        {
+          "name": "schema",
+          "in": "query",
+          "default": "results"
+        },
+        {
+          "name": "initConceptHierarchy",
+          "in": "query",
+          "default": "true"
+        },
+        {
+          "name": "tempSchema",
+          "in": "query",
+          "required": false
+        }
+      ],
+      "hasBody": false,
+      "returns": "String",
+      "source": "service/DDLService.java"
+    },
+    {
+      "operationId": "evidence.getConceptOfInterest",
+      "method": "GET",
+      "path": "/evidence/conceptofinterest/{conceptId}",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "conceptId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<ConceptOfInterestMapping>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getDrugLabel",
+      "method": "GET",
+      "path": "/evidence/label/{setid}",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "setid",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<DrugLabel>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.searchDrugLabels",
+      "method": "GET",
+      "path": "/evidence/labelsearch/{searchTerm}",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "searchTerm",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<DrugLabel>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getConceptCohortMapping",
+      "method": "GET",
+      "path": "/evidence/mapping/{conceptId}",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "conceptId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<ConceptCohortMapping>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getCohortStudyMapping",
+      "method": "GET",
+      "path": "/evidence/study/{cohortId}",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "cohortId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<CohortStudyMapping>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getDrugEvidence",
+      "method": "GET",
+      "path": "/evidence/{sourceKey}/drug/{id}",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<DrugEvidence>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getDrugConditionPairs",
+      "method": "POST",
+      "path": "/evidence/{sourceKey}/drugconditionpairs",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "searchParams",
+          "in": "body",
+          "type": "DrugConditionSourceSearchParams"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<DrugHoiEvidence>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getDrugHoiEvidence",
+      "method": "GET",
+      "path": "/evidence/{sourceKey}/drughoi/{key}",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "key",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<DrugHoiEvidence>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getDrugIngredientLabel",
+      "method": "POST",
+      "path": "/evidence/{sourceKey}/druglabel",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "identifiers",
+          "in": "body",
+          "type": "long[]"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<DrugLabelInfo>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getDrugRollupIngredientEvidence",
+      "method": "GET",
+      "path": "/evidence/{sourceKey}/drugrollup/{filter}/{id}",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "filter",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<ArrayList<DrugRollUpEvidence>>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getEvidenceDetails",
+      "method": "GET",
+      "path": "/evidence/{sourceKey}/evidencedetails",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "conditionID",
+          "in": "query",
+          "required": false
+        },
+        {
+          "name": "drugID",
+          "in": "query",
+          "required": false
+        },
+        {
+          "name": "evidenceType",
+          "in": "query",
+          "required": false
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<ArrayList<EvidenceDetails>>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.evidenceSearch",
+      "method": "POST",
+      "path": "/evidence/{sourceKey}/evidencesearch",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "search",
+          "in": "body",
+          "type": "EvidenceSearch"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ResponseEntity<ArrayList<EvidenceUniverse>>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getEvidenceSummaryBySource",
+      "method": "GET",
+      "path": "/evidence/{sourceKey}/evidencesummary",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "conditionID",
+          "in": "query",
+          "required": false
+        },
+        {
+          "name": "drugID",
+          "in": "query",
+          "required": false
+        },
+        {
+          "name": "evidenceGroup",
+          "in": "query",
+          "required": false
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<ArrayList<EvidenceSummary>>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getHoiEvidence",
+      "method": "GET",
+      "path": "/evidence/{sourceKey}/hoi/{id}",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<HoiEvidence>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getInfo",
+      "method": "GET",
+      "path": "/evidence/{sourceKey}/info",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<EvidenceInfo>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.labelEvidence",
+      "method": "POST",
+      "path": "/evidence/{sourceKey}/labelevidence",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "search",
+          "in": "body",
+          "type": "EvidenceSearch"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ResponseEntity<ArrayList<EvidenceUniverse>>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.queueNegativeControlsJob",
+      "method": "POST",
+      "path": "/evidence/{sourceKey}/negativecontrols",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "task",
+          "in": "body",
+          "type": "NegativeControlTaskParameters"
+        }
+      ],
+      "hasBody": true,
+      "returns": "JobExecutionResource",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getNegativeControlsSqlStatement",
+      "method": "GET",
+      "path": "/evidence/{sourceKey}/negativecontrols/sql",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "conceptDomain",
+          "in": "query",
+          "default": "CONDITION"
+        },
+        {
+          "name": "targetDomain",
+          "in": "query",
+          "default": "DRUG"
+        },
+        {
+          "name": "conceptOfInterest",
+          "in": "query",
+          "default": "192671"
+        }
+      ],
+      "hasBody": false,
+      "returns": "String",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getNegativeControls",
+      "method": "GET",
+      "path": "/evidence/{sourceKey}/negativecontrols/{conceptsetid}",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "conceptsetid",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<NegativeControlDTO>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getSpontaneousReports",
+      "method": "POST",
+      "path": "/evidence/{sourceKey}/spontaneousreports",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "search",
+          "in": "body",
+          "type": "EvidenceSearch"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ResponseEntity<ArrayList<SpontaneousReport>>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "evidence.getEvidence",
+      "method": "GET",
+      "path": "/evidence/{sourceKey}/{id}",
+      "group": "evidence",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<Evidence>",
+      "source": "service/EvidenceService.java"
+    },
+    {
+      "operationId": "feature-analysis.list",
+      "method": "GET",
+      "path": "/feature-analysis",
+      "group": "feature-analysis",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "Page<FeAnalysisShortDTO>",
+      "source": "feanalysis/FeAnalysisController.java"
+    },
+    {
+      "operationId": "feature-analysis.createAnalysis",
+      "method": "POST",
+      "path": "/feature-analysis",
+      "group": "feature-analysis",
+      "parameters": [
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "FeAnalysisDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "FeAnalysisDTO",
+      "source": "feanalysis/FeAnalysisController.java"
+    },
+    {
+      "operationId": "feature-analysis.listAggregates",
+      "method": "GET",
+      "path": "/feature-analysis/aggregates",
+      "group": "feature-analysis",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "List<FeAnalysisAggregateDTO>",
+      "source": "feanalysis/FeAnalysisController.java"
+    },
+    {
+      "operationId": "feature-analysis.listDomains",
+      "method": "GET",
+      "path": "/feature-analysis/domains",
+      "group": "feature-analysis",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "List<OptionDTO>",
+      "source": "feanalysis/FeAnalysisController.java"
+    },
+    {
+      "operationId": "feature-analysis.deleteAnalysis",
+      "method": "DELETE",
+      "path": "/feature-analysis/{id}",
+      "group": "feature-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "feanalysis/FeAnalysisController.java"
+    },
+    {
+      "operationId": "feature-analysis.getFeAnalysis",
+      "method": "GET",
+      "path": "/feature-analysis/{id}",
+      "group": "feature-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "FeAnalysisDTO",
+      "source": "feanalysis/FeAnalysisController.java"
+    },
+    {
+      "operationId": "feature-analysis.updateAnalysis",
+      "method": "PUT",
+      "path": "/feature-analysis/{id}",
+      "group": "feature-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "FeAnalysisDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "FeAnalysisDTO",
+      "source": "feanalysis/FeAnalysisController.java"
+    },
+    {
+      "operationId": "feature-analysis.copy",
+      "method": "GET",
+      "path": "/feature-analysis/{id}/copy",
+      "group": "feature-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "FeAnalysisDTO",
+      "source": "feanalysis/FeAnalysisController.java"
+    },
+    {
+      "operationId": "feature-analysis.getCountFeWithSameName",
+      "method": "GET",
+      "path": "/feature-analysis/{id}/exists",
+      "group": "feature-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": false
+        },
+        {
+          "name": "name",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "int",
+      "source": "feanalysis/FeAnalysisController.java"
+    },
+    {
+      "operationId": "feature-analysis.exportConceptSets",
+      "method": "GET",
+      "path": "/feature-analysis/{id}/export/conceptset",
+      "group": "feature-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody>",
+      "source": "feanalysis/FeAnalysisController.java"
+    },
+    {
+      "operationId": "featureextraction.getDefaultCovariateSettings",
+      "method": "GET",
+      "path": "/featureextraction/defaultcovariatesettings",
+      "group": "featureextraction",
+      "parameters": [
+        {
+          "name": "temporal",
+          "in": "query",
+          "required": false
+        }
+      ],
+      "hasBody": false,
+      "returns": "String",
+      "source": "service/FeatureExtractionService.java"
+    },
+    {
+      "operationId": "info.getInfo",
+      "method": "GET",
+      "path": "/info",
+      "group": "info",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "Info",
+      "source": "info/InfoService.java"
+    },
+    {
+      "operationId": "ir.getIRAnalysisList",
+      "method": "GET",
+      "path": "/ir",
+      "group": "ir",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "List<IRAnalysisShortDTO>",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.createAnalysis",
+      "method": "POST",
+      "path": "/ir",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "analysis",
+          "in": "body",
+          "type": "IRAnalysisDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "IRAnalysisDTO",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.listByTags",
+      "method": "POST",
+      "path": "/ir/byTags",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "requestDTO",
+          "in": "body",
+          "type": "TagNameListRequestDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "List<IRAnalysisDTO>",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.runDiagnostics",
+      "method": "POST",
+      "path": "/ir/check",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "irAnalysisDTO",
+          "in": "body",
+          "type": "IRAnalysisDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "CheckResult",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.doImport",
+      "method": "POST",
+      "path": "/ir/design",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "IRAnalysisDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "IRAnalysisDTO",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.generateSql",
+      "method": "POST",
+      "path": "/ir/sql",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "request",
+          "in": "body",
+          "type": "IRAnalysisService.GenerateSqlRequest"
+        }
+      ],
+      "hasBody": true,
+      "returns": "GenerateSqlResult",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.cancelAnalysis",
+      "method": "DELETE",
+      "path": "/ir/{analysis_id}/execute/{sourceKey}",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "analysis_id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.performAnalysis",
+      "method": "GET",
+      "path": "/ir/{analysis_id}/execute/{sourceKey}",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "analysis_id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "JobExecutionResource",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.delete",
+      "method": "DELETE",
+      "path": "/ir/{id}",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.getAnalysis",
+      "method": "GET",
+      "path": "/ir/{id}",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "IRAnalysisDTO",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.saveAnalysis",
+      "method": "PUT",
+      "path": "/ir/{id}",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "analysis",
+          "in": "body",
+          "type": "IRAnalysisDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "IRAnalysisDTO",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.copy",
+      "method": "GET",
+      "path": "/ir/{id}/copy",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "IRAnalysisDTO",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.export",
+      "method": "GET",
+      "path": "/ir/{id}/design",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "IRAnalysisDTO",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.getCountIRWithSameName",
+      "method": "GET",
+      "path": "/ir/{id}/exists",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "name",
+          "in": "query",
+          "required": false
+        }
+      ],
+      "hasBody": false,
+      "returns": "int",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.export.2",
+      "method": "GET",
+      "path": "/ir/{id}/export",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<byte[]>",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.getAnalysisInfo",
+      "method": "GET",
+      "path": "/ir/{id}/info",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<AnalysisInfoDTO>",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.deleteInfo",
+      "method": "DELETE",
+      "path": "/ir/{id}/info/{sourceKey}",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.getAnalysisInfo.2",
+      "method": "GET",
+      "path": "/ir/{id}/info/{sourceKey}",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "AnalysisInfoDTO",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.assignPermissionProtectedTag",
+      "method": "POST",
+      "path": "/ir/{id}/protectedtag",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.unassignPermissionProtectedTag",
+      "method": "DELETE",
+      "path": "/ir/{id}/protectedtag/{tagId}",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.getAnalysisReport",
+      "method": "GET",
+      "path": "/ir/{id}/report/{sourceKey}",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "targetId",
+          "in": "query"
+        },
+        {
+          "name": "outcomeId",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "AnalysisReport",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.assignTag",
+      "method": "POST",
+      "path": "/ir/{id}/tag",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.unassignTag",
+      "method": "DELETE",
+      "path": "/ir/{id}/tag/{tagId}",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.getVersions",
+      "method": "GET",
+      "path": "/ir/{id}/version",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<VersionDTO>",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.deleteVersion",
+      "method": "DELETE",
+      "path": "/ir/{id}/version/{version}",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.getVersion",
+      "method": "GET",
+      "path": "/ir/{id}/version/{version}",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "IRVersionFullDTO",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.updateVersion",
+      "method": "PUT",
+      "path": "/ir/{id}/version/{version}",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        },
+        {
+          "name": "updateDTO",
+          "in": "body",
+          "type": "VersionUpdateDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "VersionDTO",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "ir.copyAssetFromVersion",
+      "method": "PUT",
+      "path": "/ir/{id}/version/{version}/createAsset",
+      "group": "ir",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "IRAnalysisDTO",
+      "source": "ircalc/IRAnalysisResource.java"
+    },
+    {
+      "operationId": "job.findJobNames",
+      "method": "GET",
+      "path": "/job",
+      "group": "job",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "List<String>",
+      "source": "service/JobService.java"
+    },
+    {
+      "operationId": "job.list",
+      "method": "GET",
+      "path": "/job/execution",
+      "group": "job",
+      "parameters": [
+        {
+          "name": "jobName",
+          "in": "query",
+          "required": false
+        },
+        {
+          "name": "pageIndex",
+          "in": "query",
+          "default": "0"
+        },
+        {
+          "name": "pageSize",
+          "in": "query",
+          "default": "20"
+        },
+        {
+          "name": "comprehensivePage",
+          "in": "query",
+          "required": false,
+          "default": "false"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Page<JobExecutionResource>",
+      "source": "service/JobService.java"
+    },
+    {
+      "operationId": "job.findJobExecutionById",
+      "method": "GET",
+      "path": "/job/execution/{executionId}",
+      "group": "job",
+      "parameters": [
+        {
+          "name": "executionId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "JobExecutionResource",
+      "source": "service/JobService.java"
+    },
+    {
+      "operationId": "job.findJobByName",
+      "method": "GET",
+      "path": "/job/type/{jobType}/name/{jobName}",
+      "group": "job",
+      "parameters": [
+        {
+          "name": "jobName",
+          "in": "path"
+        },
+        {
+          "name": "jobType",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "JobExecutionResource",
+      "source": "service/JobService.java"
+    },
+    {
+      "operationId": "job.findJob",
+      "method": "GET",
+      "path": "/job/{jobId}",
+      "group": "job",
+      "parameters": [
+        {
+          "name": "jobId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "JobInstanceResource",
+      "source": "service/JobService.java"
+    },
+    {
+      "operationId": "job.findJobExecution",
+      "method": "GET",
+      "path": "/job/{jobId}/execution/{executionId}",
+      "group": "job",
+      "parameters": [
+        {
+          "name": "jobId",
+          "in": "path"
+        },
+        {
+          "name": "executionId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "JobExecutionResource",
+      "source": "service/JobService.java"
+    },
+    {
+      "operationId": "notifications.list",
+      "method": "GET",
+      "path": "/notifications",
+      "group": "notifications",
+      "parameters": [
+        {
+          "name": "hide_statuses",
+          "in": "query",
+          "required": false
+        },
+        {
+          "name": "refreshJobs",
+          "in": "query",
+          "default": "FALSE"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<JobExecutionResource>",
+      "source": "job/NotificationServiceImpl.java"
+    },
+    {
+      "operationId": "notifications.getLastViewedTimeEndpoint",
+      "method": "GET",
+      "path": "/notifications/viewed",
+      "group": "notifications",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "Date",
+      "source": "job/NotificationServiceImpl.java"
+    },
+    {
+      "operationId": "notifications.setLastViewedTimeEndpoint",
+      "method": "POST",
+      "path": "/notifications/viewed",
+      "group": "notifications",
+      "parameters": [
+        {
+          "name": "stamp",
+          "in": "body",
+          "type": "Date"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "job/NotificationServiceImpl.java"
+    },
+    {
+      "operationId": "pathway-analysis.list",
+      "method": "GET",
+      "path": "/pathway-analysis",
+      "group": "pathway-analysis",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "Page<PathwayAnalysisDTO>",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.create",
+      "method": "POST",
+      "path": "/pathway-analysis",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "PathwayAnalysisDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "PathwayAnalysisDTO",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.listByTags",
+      "method": "POST",
+      "path": "/pathway-analysis/byTags",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "requestDTO",
+          "in": "body",
+          "type": "TagNameListRequestDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "List<PathwayAnalysisDTO>",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.runDiagnostics",
+      "method": "POST",
+      "path": "/pathway-analysis/check",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "pathwayAnalysisDTO",
+          "in": "body",
+          "type": "PathwayAnalysisDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "CheckResult",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.getPathwayGenerationById",
+      "method": "GET",
+      "path": "/pathway-analysis/generation/{generationId}",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "generationId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "hasBody": false,
+      "returns": "CommonGenerationDTO",
+      "source": "PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.getGenerationDesign",
+      "method": "GET",
+      "path": "/pathway-analysis/generation/{generationId}/design",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "generationId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "hasBody": false,
+      "returns": null,
+      "source": "PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.getGenerationResults",
+      "method": "GET",
+      "path": "/pathway-analysis/generation/{generationId}/result",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "generationId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "hasBody": false,
+      "returns": null,
+      "source": "PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.importAnalysis",
+      "method": "POST",
+      "path": "/pathway-analysis/import",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "PathwayAnalysisExportDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "PathwayAnalysisDTO",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.delete",
+      "method": "DELETE",
+      "path": "/pathway-analysis/{id}",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.get",
+      "method": "GET",
+      "path": "/pathway-analysis/{id}",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "PathwayAnalysisDTO",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.copy",
+      "method": "POST",
+      "path": "/pathway-analysis/{id}",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "PathwayAnalysisDTO",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.update",
+      "method": "PUT",
+      "path": "/pathway-analysis/{id}",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "PathwayAnalysisDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "PathwayAnalysisDTO",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.getCountPAWithSameName",
+      "method": "GET",
+      "path": "/pathway-analysis/{id}/exists",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": false
+        },
+        {
+          "name": "name",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "int",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.export",
+      "method": "GET",
+      "path": "/pathway-analysis/{id}/export",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "String",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.getPathwayGenerations",
+      "method": "GET",
+      "path": "/pathway-analysis/{id}/generation",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<CommonGenerationDTO>",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.cancelPathwaysGeneration",
+      "method": "DELETE",
+      "path": "/pathway-analysis/{id}/generation/{sourceKey}",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.generatePathways",
+      "method": "POST",
+      "path": "/pathway-analysis/{id}/generation/{sourceKey}",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "JobExecutionResource",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.assignPermissionProtectedTag",
+      "method": "POST",
+      "path": "/pathway-analysis/{id}/protectedtag",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "body",
+          "type": "int"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.unassignPermissionProtectedTag",
+      "method": "DELETE",
+      "path": "/pathway-analysis/{id}/protectedtag/{tagId}",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.getAnalysisSql",
+      "method": "GET",
+      "path": "/pathway-analysis/{id}/sql/{sourceKey}",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "String",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.assignTag",
+      "method": "POST",
+      "path": "/pathway-analysis/{id}/tag",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "body",
+          "type": "int"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.unassignTag",
+      "method": "DELETE",
+      "path": "/pathway-analysis/{id}/tag/{tagId}",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.getVersions",
+      "method": "GET",
+      "path": "/pathway-analysis/{id}/version",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<VersionDTO>",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.deleteVersion",
+      "method": "DELETE",
+      "path": "/pathway-analysis/{id}/version/{version}",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.getVersion",
+      "method": "GET",
+      "path": "/pathway-analysis/{id}/version/{version}",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "PathwayVersionFullDTO",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.updateVersion",
+      "method": "PUT",
+      "path": "/pathway-analysis/{id}/version/{version}",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        },
+        {
+          "name": "updateDTO",
+          "in": "body",
+          "type": "VersionUpdateDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "VersionDTO",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "pathway-analysis.copyAssetFromVersion",
+      "method": "PUT",
+      "path": "/pathway-analysis/{id}/version/{version}/createAsset",
+      "group": "pathway-analysis",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "PathwayAnalysisDTO",
+      "source": "pathway/PathwayController.java"
+    },
+    {
+      "operationId": "permission.getPermissions",
+      "method": "GET",
+      "path": "/permission",
+      "group": "permission",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "List<Permission>",
+      "source": "security/authz/PermissionController.java"
+    },
+    {
+      "operationId": "permission.suggestRoles",
+      "method": "GET",
+      "path": "/permission/access/suggest",
+      "group": "permission",
+      "parameters": [
+        {
+          "name": "roleSearch",
+          "in": "query",
+          "required": false
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<Role>",
+      "source": "security/authz/PermissionController.java"
+    },
+    {
+      "operationId": "permission.getRolesForEntity",
+      "method": "GET",
+      "path": "/permission/access/{entityType}/{entityId}",
+      "group": "permission",
+      "parameters": [
+        {
+          "name": "entityType",
+          "in": "path"
+        },
+        {
+          "name": "entityId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<Role>",
+      "source": "security/authz/PermissionController.java"
+    },
+    {
+      "operationId": "permission.revokeEntityAccess",
+      "method": "DELETE",
+      "path": "/permission/access/{entityType}/{entityId}/role/{roleId}",
+      "group": "permission",
+      "parameters": [
+        {
+          "name": "entityType",
+          "in": "path"
+        },
+        {
+          "name": "entityId",
+          "in": "path"
+        },
+        {
+          "name": "roleId",
+          "in": "path"
+        },
+        {
+          "name": "accessRequestDTO",
+          "in": "body",
+          "type": "AccessRequestDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "security/authz/PermissionController.java"
+    },
+    {
+      "operationId": "permission.grantEntityAccess",
+      "method": "POST",
+      "path": "/permission/access/{entityType}/{entityId}/role/{roleId}",
+      "group": "permission",
+      "parameters": [
+        {
+          "name": "entityType",
+          "in": "path"
+        },
+        {
+          "name": "entityId",
+          "in": "path"
+        },
+        {
+          "name": "roleId",
+          "in": "path"
+        },
+        {
+          "name": "accessRequestDTO",
+          "in": "body",
+          "type": "AccessRequestDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "security/authz/PermissionController.java"
+    },
+    {
+      "operationId": "permission.getRolesForEntityByAccessType",
+      "method": "GET",
+      "path": "/permission/access/{entityType}/{entityId}/{accessType}",
+      "group": "permission",
+      "parameters": [
+        {
+          "name": "entityType",
+          "in": "path"
+        },
+        {
+          "name": "entityId",
+          "in": "path"
+        },
+        {
+          "name": "accessType",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<Role>",
+      "source": "security/authz/PermissionController.java"
+    },
+    {
+      "operationId": "reusable.page",
+      "method": "GET",
+      "path": "/reusable",
+      "group": "reusable",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "Page<ReusableDTO>",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.create",
+      "method": "POST",
+      "path": "/reusable",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "ReusableDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ReusableDTO",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.listByTags",
+      "method": "POST",
+      "path": "/reusable/byTags",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "requestDTO",
+          "in": "body",
+          "type": "TagNameListRequestDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "List<ReusableDTO>",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.delete",
+      "method": "DELETE",
+      "path": "/reusable/{id}",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.getDTOById",
+      "method": "GET",
+      "path": "/reusable/{id}",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ReusableDTO",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.copy",
+      "method": "POST",
+      "path": "/reusable/{id}",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ReusableDTO",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.update",
+      "method": "PUT",
+      "path": "/reusable/{id}",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "entity",
+          "in": "body",
+          "type": "ReusableDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ReusableDTO",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.exists",
+      "method": "GET",
+      "path": "/reusable/{id}/exists",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "name",
+          "in": "query",
+          "required": false
+        }
+      ],
+      "hasBody": false,
+      "returns": "boolean",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.assignPermissionProtectedTag",
+      "method": "POST",
+      "path": "/reusable/{id}/protectedtag",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "body",
+          "type": "int"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.unassignPermissionProtectedTag",
+      "method": "DELETE",
+      "path": "/reusable/{id}/protectedtag/{tagId}",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.assignTag",
+      "method": "POST",
+      "path": "/reusable/{id}/tag",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "body",
+          "type": "int"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.unassignTag",
+      "method": "DELETE",
+      "path": "/reusable/{id}/tag/{tagId}",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "tagId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.getVersions",
+      "method": "GET",
+      "path": "/reusable/{id}/version",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<VersionDTO>",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.deleteVersion",
+      "method": "DELETE",
+      "path": "/reusable/{id}/version/{version}",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.getVersion",
+      "method": "GET",
+      "path": "/reusable/{id}/version/{version}",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ReusableVersionFullDTO",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.updateVersion",
+      "method": "PUT",
+      "path": "/reusable/{id}/version/{version}",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        },
+        {
+          "name": "updateDTO",
+          "in": "body",
+          "type": "VersionUpdateDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "VersionDTO",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "reusable.copyAssetFromVersion",
+      "method": "PUT",
+      "path": "/reusable/{id}/version/{version}/createAsset",
+      "group": "reusable",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "version",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ReusableDTO",
+      "source": "reusable/ReusableService.java"
+    },
+    {
+      "operationId": "role.getRoles",
+      "method": "GET",
+      "path": "/role",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "include_personal",
+          "in": "query",
+          "default": "false"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ArrayList<Role>",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "role.createRole",
+      "method": "POST",
+      "path": "/role",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "role",
+          "in": "body",
+          "type": "Role"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Role",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "role.listMappings",
+      "method": "GET",
+      "path": "/role/mapping",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "origin",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<ExternalRoleMap>",
+      "source": "security/authz/mapping/ExternalRoleMappingController.java"
+    },
+    {
+      "operationId": "role.createMapping",
+      "method": "POST",
+      "path": "/role/mapping",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "request",
+          "in": "body",
+          "type": "MappingRequest"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ExternalRoleMap",
+      "source": "security/authz/mapping/ExternalRoleMappingController.java"
+    },
+    {
+      "operationId": "role.listAllMappings",
+      "method": "GET",
+      "path": "/role/mapping/all",
+      "group": "role",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "List<ExternalRoleMap>",
+      "source": "security/authz/mapping/ExternalRoleMappingController.java"
+    },
+    {
+      "operationId": "role.deleteMappingsFromCsv",
+      "method": "DELETE",
+      "path": "/role/mapping/import",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "csvfile",
+          "in": "body",
+          "type": "MultipartFile"
+        },
+        {
+          "name": "origin",
+          "in": "query"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ImportResult",
+      "source": "security/authz/mapping/ExternalRoleMappingController.java"
+    },
+    {
+      "operationId": "role.addMappingsFromCsv",
+      "method": "POST",
+      "path": "/role/mapping/import",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "csvfile",
+          "in": "body",
+          "type": "MultipartFile"
+        },
+        {
+          "name": "origin",
+          "in": "query"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ImportResult",
+      "source": "security/authz/mapping/ExternalRoleMappingController.java"
+    },
+    {
+      "operationId": "role.overwriteMappingsFromCsv",
+      "method": "PUT",
+      "path": "/role/mapping/import",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "csvfile",
+          "in": "body",
+          "type": "MultipartFile"
+        },
+        {
+          "name": "origin",
+          "in": "query"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ImportResult",
+      "source": "security/authz/mapping/ExternalRoleMappingController.java"
+    },
+    {
+      "operationId": "role.deleteMapping",
+      "method": "DELETE",
+      "path": "/role/mapping/{id}",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "security/authz/mapping/ExternalRoleMappingController.java"
+    },
+    {
+      "operationId": "role.removeRole",
+      "method": "DELETE",
+      "path": "/role/{roleId}",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "roleId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "role.getRole",
+      "method": "GET",
+      "path": "/role/{roleId}",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "roleId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Role",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "role.updateRole",
+      "method": "PUT",
+      "path": "/role/{roleId}",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "roleId",
+          "in": "path"
+        },
+        {
+          "name": "role",
+          "in": "body",
+          "type": "Role"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Role",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "role.getRolePermissions",
+      "method": "GET",
+      "path": "/role/{roleId}/permissions",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "roleId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<Permission>",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "role.addPermissionToRole",
+      "method": "PUT",
+      "path": "/role/{roleId}/permissions",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "roleId",
+          "in": "path"
+        },
+        {
+          "name": "permissionIds",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "role.removePermissionFromRole",
+      "method": "DELETE",
+      "path": "/role/{roleId}/permissions/{permissionIdList}",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "roleId",
+          "in": "path"
+        },
+        {
+          "name": "permissionIdList",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "role.addPermissionToRole.2",
+      "method": "PUT",
+      "path": "/role/{roleId}/permissions/{permissionIdList}",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "roleId",
+          "in": "path"
+        },
+        {
+          "name": "permissionIdList",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "role.getRoleUsers",
+      "method": "GET",
+      "path": "/role/{roleId}/users",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "roleId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ArrayList<User>",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "role.removeUserFromRole",
+      "method": "DELETE",
+      "path": "/role/{roleId}/users/{userIdList}",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "roleId",
+          "in": "path"
+        },
+        {
+          "name": "userIdList",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "role.addUserToRole",
+      "method": "PUT",
+      "path": "/role/{roleId}/users/{userIdList}",
+      "group": "role",
+      "parameters": [
+        {
+          "name": "roleId",
+          "in": "path"
+        },
+        {
+          "name": "userIdList",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "source.createSource",
+      "method": "POST",
+      "path": "/source",
+      "group": "source",
+      "parameters": [
+        {
+          "name": "keyfile",
+          "in": "body",
+          "required": false,
+          "type": "MultipartFile"
+        },
+        {
+          "name": "source",
+          "in": "body",
+          "type": "SourceRequest"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ResponseEntity<SourceInfo>",
+      "source": "source/SourceService.java"
+    },
+    {
+      "operationId": "source.checkConnectionEndpoint",
+      "method": "GET",
+      "path": "/source/connection/{key}",
+      "group": "source",
+      "parameters": [
+        {
+          "name": "key",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<SourceInfo>",
+      "source": "source/SourceService.java"
+    },
+    {
+      "operationId": "source.getPriorityDaimonsEndpoint",
+      "method": "GET",
+      "path": "/source/daimon/priority",
+      "group": "source",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "ResponseEntity<Map<SourceDaimon.DaimonType, SourceInfo>>",
+      "source": "source/SourceService.java"
+    },
+    {
+      "operationId": "source.getSourceDetails",
+      "method": "GET",
+      "path": "/source/details/{sourceId}",
+      "group": "source",
+      "parameters": [
+        {
+          "name": "sourceId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<SourceDetails>",
+      "source": "source/SourceService.java"
+    },
+    {
+      "operationId": "source.getPriorityVocabularySourceInfoEndpoint",
+      "method": "GET",
+      "path": "/source/priorityVocabulary",
+      "group": "source",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "ResponseEntity<SourceInfo>",
+      "source": "source/SourceService.java"
+    },
+    {
+      "operationId": "source.refreshSources",
+      "method": "GET",
+      "path": "/source/refresh",
+      "group": "source",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "ResponseEntity<Collection<SourceInfo>>",
+      "source": "source/SourceService.java"
+    },
+    {
+      "operationId": "source.getSourcesEndpoint",
+      "method": "GET",
+      "path": "/source/sources",
+      "group": "source",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "ResponseEntity<Collection<SourceInfo>>",
+      "source": "source/SourceService.java"
+    },
+    {
+      "operationId": "source.getSource",
+      "method": "GET",
+      "path": "/source/{key}",
+      "group": "source",
+      "parameters": [
+        {
+          "name": "key",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<SourceInfo>",
+      "source": "source/SourceService.java"
+    },
+    {
+      "operationId": "source.delete",
+      "method": "DELETE",
+      "path": "/source/{sourceId}",
+      "group": "source",
+      "parameters": [
+        {
+          "name": "sourceId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<Void>",
+      "source": "source/SourceService.java"
+    },
+    {
+      "operationId": "source.updateSource",
+      "method": "PUT",
+      "path": "/source/{sourceId}",
+      "group": "source",
+      "parameters": [
+        {
+          "name": "sourceId",
+          "in": "path"
+        },
+        {
+          "name": "keyfile",
+          "in": "body",
+          "required": false,
+          "type": "MultipartFile"
+        },
+        {
+          "name": "source",
+          "in": "body",
+          "type": "SourceRequest"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ResponseEntity<SourceInfo>",
+      "source": "source/SourceService.java"
+    },
+    {
+      "operationId": "source.updateSourcePriority",
+      "method": "POST",
+      "path": "/source/{sourceKey}/daimons/{daimonType}/set-priority",
+      "group": "source",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "daimonType",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<Void>",
+      "source": "source/SourceService.java"
+    },
+    {
+      "operationId": "sqlrender.translateSQLFromSourceStatement",
+      "method": "POST",
+      "path": "/sqlrender/translate",
+      "group": "sqlrender",
+      "parameters": [
+        {
+          "name": "sourceStatement",
+          "in": "body",
+          "type": "SourceStatement"
+        }
+      ],
+      "hasBody": true,
+      "returns": "TranslatedStatement",
+      "source": "service/SqlRenderService.java"
+    },
+    {
+      "operationId": "statistic.accessStatistics",
+      "method": "POST",
+      "path": "/statistic/accesstrends",
+      "group": "statistic",
+      "parameters": [
+        {
+          "name": "accessTrendsStatisticsRequest",
+          "in": "body",
+          "type": "AccessTrendsStatisticsRequest"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ResponseEntity<?>",
+      "source": "statistic/service/StatisticService.java"
+    },
+    {
+      "operationId": "statistic.executionStatistics",
+      "method": "POST",
+      "path": "/statistic/executions",
+      "group": "statistic",
+      "parameters": [
+        {
+          "name": "executionStatisticsRequest",
+          "in": "body",
+          "type": "ExecutionStatisticsRequest"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ResponseEntity<?>",
+      "source": "statistic/service/StatisticService.java"
+    },
+    {
+      "operationId": "tag.listInfoDTO.2",
+      "method": "GET",
+      "path": "/tag",
+      "group": "tag",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "List<TagDTO>",
+      "source": "tag/TagService.java"
+    },
+    {
+      "operationId": "tag.create",
+      "method": "POST",
+      "path": "/tag",
+      "group": "tag",
+      "parameters": [
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "TagDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "TagDTO",
+      "source": "tag/TagService.java"
+    },
+    {
+      "operationId": "tag.getAssignmentPermissions",
+      "method": "GET",
+      "path": "/tag/assignmentPermissions",
+      "group": "tag",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "AssignmentPermissionsDTO",
+      "source": "tag/TagService.java"
+    },
+    {
+      "operationId": "tag.assignGroup",
+      "method": "POST",
+      "path": "/tag/multiAssign",
+      "group": "tag",
+      "parameters": [
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "TagGroupSubscriptionDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "tag/TagService.java"
+    },
+    {
+      "operationId": "tag.unassignGroup",
+      "method": "POST",
+      "path": "/tag/multiUnassign",
+      "group": "tag",
+      "parameters": [
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "TagGroupSubscriptionDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "tag/TagService.java"
+    },
+    {
+      "operationId": "tag.listInfoDTO",
+      "method": "GET",
+      "path": "/tag/search",
+      "group": "tag",
+      "parameters": [
+        {
+          "name": "namePart",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<TagDTO>",
+      "source": "tag/TagService.java"
+    },
+    {
+      "operationId": "tag.delete",
+      "method": "DELETE",
+      "path": "/tag/{id}",
+      "group": "tag",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "tag/TagService.java"
+    },
+    {
+      "operationId": "tag.getDTOById",
+      "method": "GET",
+      "path": "/tag/{id}",
+      "group": "tag",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "TagDTO",
+      "source": "tag/TagService.java"
+    },
+    {
+      "operationId": "tag.update",
+      "method": "PUT",
+      "path": "/tag/{id}",
+      "group": "tag",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "entity",
+          "in": "body",
+          "type": "TagDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "TagDTO",
+      "source": "tag/TagService.java"
+    },
+    {
+      "operationId": "tool.getTools",
+      "method": "GET",
+      "path": "/tool",
+      "group": "tool",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "List<ToolDTO>",
+      "source": "tool/ToolServiceImpl.java"
+    },
+    {
+      "operationId": "tool.saveTool",
+      "method": "POST",
+      "path": "/tool",
+      "group": "tool",
+      "parameters": [
+        {
+          "name": "toolDTO",
+          "in": "body",
+          "type": "ToolDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ToolDTO",
+      "source": "tool/ToolServiceImpl.java"
+    },
+    {
+      "operationId": "tool.updateTool",
+      "method": "PUT",
+      "path": "/tool",
+      "group": "tool",
+      "parameters": [
+        {
+          "name": "toolDTO",
+          "in": "body",
+          "type": "ToolDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ToolDTO",
+      "source": "tool/ToolServiceImpl.java"
+    },
+    {
+      "operationId": "tool.delete",
+      "method": "DELETE",
+      "path": "/tool/{id}",
+      "group": "tool",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "tool/ToolServiceImpl.java"
+    },
+    {
+      "operationId": "tool.getById",
+      "method": "GET",
+      "path": "/tool/{id}",
+      "group": "tool",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ToolDTO",
+      "source": "tool/ToolServiceImpl.java"
+    },
+    {
+      "operationId": "user.getUsers",
+      "method": "GET",
+      "path": "/user",
+      "group": "user",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "ArrayList<User>",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "user.list",
+      "method": "GET",
+      "path": "/user/apikeys",
+      "group": "user",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "List<ApiKeyService.ApiKeyInfo>",
+      "source": "security/apikey/ApiKeyController.java"
+    },
+    {
+      "operationId": "user.create",
+      "method": "POST",
+      "path": "/user/apikeys",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "request",
+          "in": "body",
+          "type": "CreateRequest"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ResponseEntity<ApiKeyService.ApiKeyResult>",
+      "source": "security/apikey/ApiKeyController.java"
+    },
+    {
+      "operationId": "user.revoke",
+      "method": "DELETE",
+      "path": "/user/apikeys/{keyIdentifier}",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "keyIdentifier",
+          "in": "path"
+        },
+        {
+          "name": "remove",
+          "in": "query",
+          "required": false
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<Void>",
+      "source": "security/apikey/ApiKeyController.java"
+    },
+    {
+      "operationId": "user.importUsersEndpoint",
+      "method": "POST",
+      "path": "/user/import",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "users",
+          "in": "body",
+          "type": "List<AtlasUserRoles>"
+        },
+        {
+          "name": "provider",
+          "in": "query"
+        },
+        {
+          "name": "preserve",
+          "in": "query",
+          "default": "TRUE"
+        }
+      ],
+      "hasBody": true,
+      "returns": "UserImportJobDTO",
+      "source": "security/provisioning/service/UserImportServiceImpl.java"
+    },
+    {
+      "operationId": "user.listJobsEndpoint",
+      "method": "GET",
+      "path": "/user/import/job",
+      "group": "user",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "List<UserImportJobDTO>",
+      "source": "security/provisioning/service/UserImportJobServiceImpl.java"
+    },
+    {
+      "operationId": "user.createJobEndpoint",
+      "method": "POST",
+      "path": "/user/import/job",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "jobDTO",
+          "in": "body",
+          "type": "UserImportJobDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "UserImportJobDTO",
+      "source": "security/provisioning/service/UserImportJobServiceImpl.java"
+    },
+    {
+      "operationId": "user.deleteJobEndpoint",
+      "method": "DELETE",
+      "path": "/user/import/job/{id}",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "void",
+      "source": "security/provisioning/service/UserImportJobServiceImpl.java"
+    },
+    {
+      "operationId": "user.getJobEndpoint",
+      "method": "GET",
+      "path": "/user/import/job/{id}",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "UserImportJobDTO",
+      "source": "security/provisioning/service/UserImportJobServiceImpl.java"
+    },
+    {
+      "operationId": "user.updateJobEndpoint",
+      "method": "PUT",
+      "path": "/user/import/job/{id}",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        },
+        {
+          "name": "jobDTO",
+          "in": "body",
+          "type": "UserImportJobDTO"
+        }
+      ],
+      "hasBody": true,
+      "returns": "UserImportJobDTO",
+      "source": "security/provisioning/service/UserImportJobServiceImpl.java"
+    },
+    {
+      "operationId": "user.getImportHistoryEndpoint",
+      "method": "GET",
+      "path": "/user/import/job/{id}/history",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<JobHistoryItemDTO>",
+      "source": "security/provisioning/service/UserImportJobServiceImpl.java"
+    },
+    {
+      "operationId": "user.findDirectoryUsers",
+      "method": "POST",
+      "path": "/user/import/{type}",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "type",
+          "in": "path"
+        },
+        {
+          "name": "mapping",
+          "in": "body",
+          "type": "RoleGroupMapping"
+        }
+      ],
+      "hasBody": true,
+      "returns": "List<AtlasUserRoles>",
+      "source": "security/provisioning/service/UserImportServiceImpl.java"
+    },
+    {
+      "operationId": "user.findGroupsEndpoint",
+      "method": "GET",
+      "path": "/user/import/{type}/groups",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "type",
+          "in": "path"
+        },
+        {
+          "name": "search",
+          "in": "query",
+          "required": false
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<LdapGroup>",
+      "source": "security/provisioning/service/UserImportServiceImpl.java"
+    },
+    {
+      "operationId": "user.getMappingEndpoint",
+      "method": "GET",
+      "path": "/user/import/{type}/mapping",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "type",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "RoleGroupMapping",
+      "source": "security/provisioning/service/UserImportServiceImpl.java"
+    },
+    {
+      "operationId": "user.saveMappingEndpoint",
+      "method": "POST",
+      "path": "/user/import/{type}/mapping",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "type",
+          "in": "path"
+        },
+        {
+          "name": "mapping",
+          "in": "body",
+          "type": "RoleGroupMapping"
+        }
+      ],
+      "hasBody": true,
+      "returns": "void",
+      "source": "security/provisioning/service/UserImportServiceImpl.java"
+    },
+    {
+      "operationId": "user.testConnectionEndpoint",
+      "method": "GET",
+      "path": "/user/import/{type}/test",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "type",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ConnectionInfo",
+      "source": "security/provisioning/service/UserImportServiceImpl.java"
+    },
+    {
+      "operationId": "user.login.2",
+      "method": "GET",
+      "path": "/user/login/db",
+      "group": "user",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "LoginService.Result",
+      "source": "security/authc/LoginController.java"
+    },
+    {
+      "operationId": "user.loginPost",
+      "method": "POST",
+      "path": "/user/login/db",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "login",
+          "in": "query",
+          "required": false
+        },
+        {
+          "name": "password",
+          "in": "query",
+          "required": false
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<?>",
+      "source": "security/authc/LoginController.java"
+    },
+    {
+      "operationId": "user.login.3",
+      "method": "GET",
+      "path": "/user/login/ldap",
+      "group": "user",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "LoginService.Result",
+      "source": "security/authc/LoginController.java"
+    },
+    {
+      "operationId": "user.login.4",
+      "method": "GET",
+      "path": "/user/login/openidDirect",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "Authorization",
+          "in": "header",
+          "required": false
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<OneTimeCodeResponse>",
+      "source": "security/authc/OidcAuthConfig.java"
+    },
+    {
+      "operationId": "user.redeemOtc",
+      "method": "GET",
+      "path": "/user/login/otc",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "code",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<LoginService.Result>",
+      "source": "security/authc/LoginController.java"
+    },
+    {
+      "operationId": "user.login",
+      "method": "GET",
+      "path": "/user/login/windows",
+      "group": "user",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "LoginService.Result",
+      "source": "security/authc/LoginController.java"
+    },
+    {
+      "operationId": "user.logout",
+      "method": "GET",
+      "path": "/user/logout",
+      "group": "user",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "LoginService.Result",
+      "source": "security/authc/LoginController.java"
+    },
+    {
+      "operationId": "user.context",
+      "method": "GET",
+      "path": "/user/me",
+      "group": "user",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "// Open: returns the current principal's",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "user.getAuthenticationProviders",
+      "method": "GET",
+      "path": "/user/providers",
+      "group": "user",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "AuthenticationProviders",
+      "source": "security/provisioning/service/UserImportServiceImpl.java"
+    },
+    {
+      "operationId": "user.refresh",
+      "method": "GET",
+      "path": "/user/refresh",
+      "group": "user",
+      "parameters": [],
+      "hasBody": false,
+      "returns": "LoginService.Result",
+      "source": "security/authc/LoginController.java"
+    },
+    {
+      "operationId": "user.runAs",
+      "method": "POST",
+      "path": "/user/runas",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "response",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ResponseEntity<LoginService.Result>",
+      "source": "security/authc/LoginController.java"
+    },
+    {
+      "operationId": "user.getUsersPermissions",
+      "method": "GET",
+      "path": "/user/{userId}/permissions",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "List<Permission>",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "user.getUserRoles",
+      "method": "GET",
+      "path": "/user/{userId}/roles",
+      "group": "user",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "ArrayList<Role>",
+      "source": "security/authz/UserController.java"
+    },
+    {
+      "operationId": "vocabulary.getConceptSetExpressionSQL",
+      "method": "POST",
+      "path": "/vocabulary/conceptSetExpressionSQL",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "conceptSetExpression",
+          "in": "body",
+          "type": "ConceptSetExpression"
+        }
+      ],
+      "hasBody": true,
+      "returns": "String",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.getCommonAncestors",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/commonAncestors",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "identifiers",
+          "in": "body",
+          "type": "Object[]"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<RelatedConcept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.compareConceptSets",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/compare",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "conceptSetExpressionList",
+          "in": "body",
+          "type": "ConceptSetExpression[]"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<ConceptSetComparison>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.compareConceptSetsCsv",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/compare-arbitrary",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "dto",
+          "in": "body",
+          "type": "CompareArbitraryDto"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<ConceptSetComparison>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.getConcept",
+      "method": "GET",
+      "path": "/vocabulary/{sourceKey}/concept/{id}",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Concept",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.getConceptAncestorAndDescendant",
+      "method": "GET",
+      "path": "/vocabulary/{sourceKey}/concept/{id}/ancestorAndDescendant",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<RelatedConcept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.getDescendantConcepts",
+      "method": "GET",
+      "path": "/vocabulary/{sourceKey}/concept/{id}/descendants",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<RelatedConcept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.getRelatedConcepts",
+      "method": "GET",
+      "path": "/vocabulary/{sourceKey}/concept/{id}/related",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "id",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<RelatedConcept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.getDescendantConceptsByList",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/conceptlist/descendants",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "conceptList",
+          "in": "body",
+          "type": "String[]"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<RelatedConcept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.getDescendantOfAncestorConcepts",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/descendantofancestor",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "search",
+          "in": "body",
+          "type": "DescendentOfAncestorSearch"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<Concept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.getDomains",
+      "method": "GET",
+      "path": "/vocabulary/{sourceKey}/domains",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<Domain>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.countIncludedConceptSets",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/included-concepts/count",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "conceptSetExpression",
+          "in": "body",
+          "type": "ConceptSetExpression"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Integer",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.getInfo",
+      "method": "GET",
+      "path": "/vocabulary/{sourceKey}/info",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "VocabularyInfo",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.executeIdentifierLookup",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/lookup/identifiers",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "identifiers",
+          "in": "body",
+          "type": "long[]"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<Concept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.calculateAscendants",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/lookup/identifiers/ancestors",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "ids",
+          "in": "body",
+          "type": "Ids"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Map<Long, List<Long>>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.executeMappedLookup",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/lookup/mapped",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "identifiers",
+          "in": "body",
+          "type": "long[]"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<Concept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.getRecommendedConceptsByList",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/lookup/recommended",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "conceptList",
+          "in": "body",
+          "type": "long[]"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<RecommendedConcept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.executeSourcecodeLookup",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/lookup/sourcecodes",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "sourcecodes",
+          "in": "body",
+          "type": "String[]"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<Concept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.optimizeConceptSet",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/optimize",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "conceptSetExpression",
+          "in": "body",
+          "type": "ConceptSetExpression"
+        }
+      ],
+      "hasBody": true,
+      "returns": "ConceptSetOptimizationResult",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.getRelatedStandardMappedConcepts",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/related-standard",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "allConceptIds",
+          "in": "body",
+          "type": "List<Long>"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<MappedRelatedConcept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.getRelatedConcepts.2",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/relatedconcepts",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "search",
+          "in": "body",
+          "type": "RelatedConceptSearch"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<Concept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.resolveConceptSetExpression",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/resolveConceptSetExpression",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "conceptSetExpression",
+          "in": "body",
+          "type": "ConceptSetExpression"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<Long>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.executeSearch.3",
+      "method": "GET",
+      "path": "/vocabulary/{sourceKey}/search",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "query",
+          "in": "query"
+        },
+        {
+          "name": "rows",
+          "in": "query"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<Concept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.executeSearch",
+      "method": "POST",
+      "path": "/vocabulary/{sourceKey}/search",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "search",
+          "in": "body",
+          "type": "ConceptSearch"
+        }
+      ],
+      "hasBody": true,
+      "returns": "Collection<Concept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.executeSearch.2",
+      "method": "GET",
+      "path": "/vocabulary/{sourceKey}/search/{query}",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "query",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<Concept>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "vocabulary.getVocabularies",
+      "method": "GET",
+      "path": "/vocabulary/{sourceKey}/vocabularies",
+      "group": "vocabulary",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        }
+      ],
+      "hasBody": false,
+      "returns": "Collection<Vocabulary>",
+      "source": "service/VocabularyService.java"
+    },
+    {
+      "operationId": "person.getPersonProfile",
+      "method": "GET",
+      "path": "/{sourceKey}/person/{personId}",
+      "group": "person",
+      "parameters": [
+        {
+          "name": "sourceKey",
+          "in": "path"
+        },
+        {
+          "name": "personId",
+          "in": "path"
+        },
+        {
+          "name": "cohort",
+          "in": "query",
+          "default": "0"
+        }
+      ],
+      "hasBody": false,
+      "returns": "PersonProfile",
+      "source": "person/PersonService.java"
+    }
+  ]
+}

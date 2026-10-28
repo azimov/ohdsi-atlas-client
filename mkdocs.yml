@@ -1,0 +1,18 @@
+site_name: Atlas3 clients
+site_description: Python and R clients for OHDSI ATLAS 3.0 and WebAPI 3.0
+repo_url: https://github.com/OHDSI/Atlas3Clients
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - content.code.copy
+nav:
+  - Home: index.md
+  - Authentication: authentication.md
+  - Cohort definition sets: cohort-sets.md
+  - Endpoint coverage: endpoints.md
+  - Python / R parity: parity.md
+  - Architecture: architecture.md
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences

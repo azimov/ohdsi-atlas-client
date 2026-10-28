@@ -1,0 +1,10 @@
+^\.Rproj\.user$
+^\.github$
+^extras$
+^README\.Rmd$
+^\.lintr$
+^\.pre-commit-config\.yaml$
+^_pkgdown\.yml$
+^pkgdown$
+^docs$
+^\.DS_Store$
