@@ -34,10 +34,13 @@ Authentication uses a personal API key only. Supply one directly, or store it
 for later with `login()`:
 
 ```{r}
-atlas <- connectAtlas("https://atlas.example.org", apiKey = "wa_...")
+atlas <- connectAtlas(
+  "https://atlas.example.org",
+  apiKey = Sys.getenv("ATLAS3_API_KEY")
+)
 # or
 atlas <- connectAtlas("https://atlas.example.org")
-atlas$login("wa_...")
+atlas$login(Sys.getenv("ATLAS3_API_KEY"))
 atlas$whoami()
 ```
 

@@ -13,11 +13,14 @@ install.packages("Atlas3")
 ```r
 library(Atlas3)
 
-atlas <- connectAtlas("https://atlas.example.org", apiKey = "wa_...")
+atlas <- connectAtlas(
+  "https://atlas.example.org",
+  apiKey = Sys.getenv("ATLAS3_API_KEY")
+)
 
 # Or store a key for later:
 # atlas <- connectAtlas("https://atlas.example.org")
-# atlas$login("wa_...")
+# atlas$login(Sys.getenv("ATLAS3_API_KEY"))
 
 atlas$version
 vapply(atlas$sources$list(), `[[`, "", "sourceKey")
@@ -71,11 +74,11 @@ length(atlas$endpoints())   # 344 operations from WebAPI 3.0
 
 ## Authentication
 
-Only personal API keys are supported. Every request sends
-`X-API-KEY: wa_...`. There is no username/password or JWT login.
+Only personal API keys are supported. Every request sends `X-API-KEY`. There is
+no username/password or JWT login.
 
 Keys come from `connectAtlas(..., apiKey = ...)`, `ATLAS3_API_KEY`, or a key
-stored by `atlas$login("wa_...")`. `login()` validates the key against
+stored by `atlas$login(...)`. `login()` validates the key against
 `/user/me` before persisting it. Keys are stored in the OS keyring when the
 optional `keyring` package is installed, otherwise in a `0600` file under
 `tools::R_user_dir("Atlas3")`.

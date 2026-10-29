@@ -48,7 +48,7 @@ The integration suites exercise a real ATLAS 3.0 deployment. They are opt-in:
 
 ```bash
 export ATLAS3_TEST_URL="http://localhost:8081"   # ATLAS UI URL or /WebAPI URL
-export ATLAS3_TEST_API_KEY="wa_..."
+# Set ATLAS3_TEST_API_KEY in your shell or secret manager; do not commit it.
 export ATLAS3_TEST_SOURCE="EUNOMIA"
 
 cd python && pytest -m integration

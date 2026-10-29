@@ -11,13 +11,18 @@ pip install "atlas3[circe,keyring]"
 ## Quick start
 
 ```python
+import os
+
 from atlas3 import Atlas
 
-atlas = Atlas("https://atlas.example.org", api_key="wa_...")
+atlas = Atlas(
+    "https://atlas.example.org",
+    api_key=os.environ["ATLAS3_API_KEY"],
+)
 
 # Or store a key for later:
 # atlas = Atlas("https://atlas.example.org")
-# atlas.login("wa_...")
+# atlas.login(os.environ["ATLAS3_API_KEY"])
 
 print(atlas.version)
 for source in atlas.sources.list():
@@ -82,11 +87,11 @@ print(atlas.endpoints.describe())
 
 ## Authentication
 
-Only personal API keys are supported. Every request sends
-`X-API-KEY: wa_...`. There is no username/password or JWT login.
+Only personal API keys are supported. Every request sends `X-API-KEY`. There is
+no username/password or JWT login.
 
 Keys come from `Atlas(..., api_key=...)`, `ATLAS3_API_KEY`, or a key stored by
-`atlas.login("wa_...")`. `login()` validates the key against `/user/me` before
+`atlas.login(...)`. `login()` validates the key against `/user/me` before
 persisting it. Keys are stored in the OS keyring when available, otherwise in a
 `0600` credentials file.
 

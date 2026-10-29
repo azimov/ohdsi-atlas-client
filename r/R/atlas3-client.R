@@ -228,8 +228,8 @@ Atlas3 <- R6::R6Class(
 #' lookup, or call `$login(apiKey)` afterwards to validate and store one.
 #'
 #' @param url ATLAS UI URL, WebAPI URL, or bare host name.
-#' @param apiKey Personal API key (`wa_...`). If omitted, `ATLAS3_API_KEY` or
-#'   a stored key is used.
+#' @param apiKey Personal API key. If omitted, `ATLAS3_API_KEY` or a stored key
+#'   is used.
 #' @param profile Credential-store profile name.
 #' @param timeout Request timeout in seconds.
 #' @param discovery Optional pre-built discovery result (used in tests).
@@ -240,7 +240,10 @@ Atlas3 <- R6::R6Class(
 #' @export
 #' @examples
 #' \dontrun{
-#' atlas <- connectAtlas("https://atlas.example.org", apiKey = "wa_...")
+#' atlas <- connectAtlas(
+#'   "https://atlas.example.org",
+#'   apiKey = Sys.getenv("ATLAS3_API_KEY")
+#' )
 #' atlas$sources$list()
 #' }
 connectAtlas <- function(url,

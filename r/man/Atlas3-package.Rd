@@ -15,7 +15,10 @@ sets, CDM results, jobs, and analysis resources.
 
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{library(Atlas3)
-atlas <- connectAtlas("https://atlas.example.org", apiKey = "wa_...")
+atlas <- connectAtlas(
+  "https://atlas.example.org",
+  apiKey = Sys.getenv("ATLAS3_API_KEY")
+)
 atlas$sources$list()
 atlas$concepts$search("EUNOMIA", "diclofenac")
 }\if{html}{\out{</div>}}

@@ -2,9 +2,14 @@
 
 Quick start::
 
+    import os
+
     from atlas3 import Atlas
 
-    atlas = Atlas("https://atlas.example.org", api_key="wa_...")
+    atlas = Atlas(
+        "https://atlas.example.org",
+        api_key=os.environ["ATLAS3_API_KEY"],
+    )
     print(atlas.sources.list())
 """
 

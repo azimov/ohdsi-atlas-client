@@ -17,8 +17,8 @@ connectAtlas(
 \arguments{
 \item{url}{ATLAS UI URL, WebAPI URL, or bare host name.}
 
-\item{apiKey}{Personal API key (\code{wa_...}). If omitted, \code{ATLAS3_API_KEY} or
-a stored key is used.}
+\item{apiKey}{Personal API key. If omitted, \code{ATLAS3_API_KEY} or a stored key
+is used.}
 
 \item{profile}{Credential-store profile name.}
 
@@ -41,7 +41,10 @@ lookup, or call \verb{$login(apiKey)} afterwards to validate and store one.
 }
 \examples{
 \dontrun{
-atlas <- connectAtlas("https://atlas.example.org", apiKey = "wa_...")
+atlas <- connectAtlas(
+  "https://atlas.example.org",
+  apiKey = Sys.getenv("ATLAS3_API_KEY")
+)
 atlas$sources$list()
 }
 }

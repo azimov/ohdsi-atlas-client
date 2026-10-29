@@ -16,5 +16,5 @@ A short, safe display string.
 Redact an API key for display
 }
 \examples{
-atlas3RedactKey("wa_1234567890abcdef")
+atlas3RedactKey(Sys.getenv("ATLAS3_API_KEY"))
 }

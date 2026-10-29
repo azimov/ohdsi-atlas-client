@@ -120,7 +120,7 @@ atlas3VersionAtLeast <- function(version, minimum = "3.0.0") {
 #' @return A short, safe display string.
 #' @export
 #' @examples
-#' atlas3RedactKey("wa_1234567890abcdef")
+#' atlas3RedactKey(Sys.getenv("ATLAS3_API_KEY"))
 atlas3RedactKey <- function(key) {
   if (is.null(key) || !nzchar(key)) {
     return("<none>")

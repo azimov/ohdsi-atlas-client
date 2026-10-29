@@ -3,9 +3,8 @@
 All examples expect a live ATLAS 3.0 deployment.
 
 ```bash
-export ATLAS3_URL=https://atlas.example.org
-export ATLAS3_API_KEY=wa_...
-export ATLAS3_SOURCE=EUNOMIA
+# Set ATLAS3_URL, ATLAS3_API_KEY (via your shell or secret manager), and
+# ATLAS3_SOURCE in the environment before running the examples.
 
 python examples/python-quickstart.py
 Rscript examples/r-quickstart.R

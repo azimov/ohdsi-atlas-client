@@ -52,7 +52,8 @@ class AtlasClient:
     Args:
         url: ATLAS UI URL, WebAPI URL, or bare host. Discovery appends the
             common ``/WebAPI`` context when necessary.
-        api_key: Personal API key (``wa_...``). Sent as ``X-API-KEY``.
+        api_key: Personal API key. Sent as ``X-API-KEY``; prefer the
+            ``ATLAS3_API_KEY`` environment variable.
         profile: Credential-store profile, useful for multiple environments.
         timeout: Request timeout in seconds.
         verify: Verify TLS certificates.
@@ -61,7 +62,11 @@ class AtlasClient:
         credential_store: Optional credential store.
 
     Example:
-        >>> atlas = AtlasClient("https://atlas.example.org", api_key="wa_...")
+        >>> import os
+        >>> atlas = AtlasClient(
+        ...     "https://atlas.example.org",
+        ...     api_key=os.environ["ATLAS3_API_KEY"],
+        ... )
         >>> atlas.sources.list()
 
     Authenticate with an API key only. Create a key in ATLAS under
@@ -212,7 +217,7 @@ class AtlasClient:
         under "My Account" / API keys, or ask an administrator.
 
         Args:
-            api_key: Personal API key in the form ``wa_<id>_<secret>``.
+            api_key: Personal API key.
             store: Persist the key in the keyring or credentials file.
 
         Raises:

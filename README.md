@@ -27,8 +27,9 @@ OHDSI tools.
 * **Give it a URL.** `Atlas("https://atlas.example.org")` discovers the WebAPI
   root (including the common `/atlas` + `/WebAPI` reverse-proxy layout), checks
   the server version, and reuses a stored API key when one exists.
-* **API keys only.** Pass a personal **API key** (`wa_...`) or store one with
-  `login(api_key)`. There are no username/password or JWT login paths. Keys
+* **API keys only.** Pass a personal **API key** via `api_key` / `apiKey` or
+  store one with `login(api_key)`. There are no username/password or JWT login
+  paths. Keys
   live in the OS keyring (Python/R) or a permission-restricted file and are
   never logged.
 * **Cohort definition sets, not just cohorts.** Export a set of cohort
@@ -51,12 +52,17 @@ OHDSI tools.
 ## Quick start (Python)
 
 ```python
+import os
+
 from atlas3 import Atlas
 
-atlas = Atlas("https://atlas.example.org", api_key="wa_...")  # checks >= 3.0
+atlas = Atlas(
+    "https://atlas.example.org",
+    api_key=os.environ["ATLAS3_API_KEY"],
+)
 # ...or store a key for later:
 # atlas = Atlas("https://atlas.example.org")
-# atlas.login("wa_...")
+# atlas.login(os.environ["ATLAS3_API_KEY"])
 
 print(atlas.version)                         # "3.0.0"
 print([s.source_key for s in atlas.sources.list()])
@@ -86,10 +92,13 @@ pip install "atlas3[circe,keyring]"
 ```r
 library(Atlas3)
 
-atlas <- connectAtlas("https://atlas.example.org", apiKey = "wa_...")
+atlas <- connectAtlas(
+  "https://atlas.example.org",
+  apiKey = Sys.getenv("ATLAS3_API_KEY")
+)
 # ...or store a key for later:
 # atlas <- connectAtlas("https://atlas.example.org")
-# atlas$login("wa_...")
+# atlas$login(Sys.getenv("ATLAS3_API_KEY"))
 
 atlas$version
 vapply(atlas$sources$list(), `[[`, "", "sourceKey")
@@ -116,7 +125,7 @@ database passwords, OAuth browser sessions, or JWTs.
 Every request sends:
 
 ```http
-X-API-KEY: wa_<identifier>_<secret>
+X-API-KEY: <your API key>
 ```
 
 A key is supplied in this order:

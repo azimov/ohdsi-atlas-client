@@ -6,27 +6,35 @@ database passwords, OAuth browser sessions, or JWTs.
 ## The short version
 
 ```python
+import os
+
 from atlas3 import Atlas
 
-atlas = Atlas("https://atlas.example.org", api_key="wa_...")
+atlas = Atlas(
+    "https://atlas.example.org",
+    api_key=os.environ["ATLAS3_API_KEY"],
+)
 # or store a key for later:
 atlas = Atlas("https://atlas.example.org")
-atlas.login("wa_...")
+atlas.login(os.environ["ATLAS3_API_KEY"])
 ```
 
 ```r
 library(Atlas3)
 
-atlas <- connectAtlas("https://atlas.example.org", apiKey = "wa_...")
+atlas <- connectAtlas(
+  "https://atlas.example.org",
+  apiKey = Sys.getenv("ATLAS3_API_KEY")
+)
 # or store a key for later:
 atlas <- connectAtlas("https://atlas.example.org")
-atlas$login("wa_...")
+atlas$login(Sys.getenv("ATLAS3_API_KEY"))
 ```
 
 Every request sends:
 
 ```http
-X-API-KEY: wa_<identifier>_<secret>
+X-API-KEY: <your API key>
 ```
 
 ## 1. Get an API key
@@ -93,13 +101,15 @@ invalid key raises an authentication error and leaves any previously configured
 key unchanged.
 
 ```python
+import os
+
 atlas = Atlas("https://atlas.example.org")
-atlas.login("wa_...", store=True)
+atlas.login(os.environ["ATLAS3_API_KEY"], store=True)
 ```
 
 ```r
 atlas <- connectAtlas("https://atlas.example.org")
-atlas$login("wa_...", store = TRUE)
+atlas$login(Sys.getenv("ATLAS3_API_KEY"), store = TRUE)
 ```
 
 ### Stored credentials
@@ -128,16 +138,18 @@ Only the key and its public identifier are stored. There is no password field.
 ## 4. Key rotation and revocation
 
 ```python
+import os
+
 atlas.logout(revoke=True)     # DELETE /user/apikeys/{id}?remove=true, then clear store
-atlas.set_api_key("wa_new...")
+atlas.set_api_key(os.environ["ATLAS3_NEW_API_KEY"])
 ```
 
 ```r
 atlas$logout(revoke = TRUE)
-atlas$login("wa_new...")
+atlas$login(Sys.getenv("ATLAS3_NEW_API_KEY"))
 ```
 
-The identifier is the 16-hex-character segment in `wa_<identifier>_<secret>`.
+The identifier is the 16-hex-character segment after the key prefix.
 If the client cannot parse the identifier (for example a key from a custom
 format), it removes the local credential but leaves server-side revocation to
 the ATLAS UI.
