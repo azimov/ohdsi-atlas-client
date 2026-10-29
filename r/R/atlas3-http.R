@@ -25,8 +25,6 @@ atlas3HttpHeaders <- function(client) {
   headers <- list(Accept = "application/json")
   if (!is.null(client$apiKey) && nzchar(client$apiKey)) {
     headers[["X-API-KEY"]] <- client$apiKey
-  } else if (!is.null(client$bearerToken) && nzchar(client$bearerToken)) {
-    headers[["Authorization"]] <- paste("Bearer", client$bearerToken)
   }
   headers
 }
@@ -55,8 +53,8 @@ atlas3HttpError <- function(response, method, url) {
   if (status == 401L) {
     abort(
       paste0(
-        "WebAPI rejected the credential: ", message,
-        ". Call $login() or connect with a valid API key."
+        "WebAPI rejected the API key: ", message,
+        ". Supply a valid key with connectAtlas(apiKey = ...) or $login(apiKey)."
       ),
       class = c("atlas3_authentication_error", "atlas3_http_error"),
       status = status,

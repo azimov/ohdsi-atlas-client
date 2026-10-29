@@ -42,3 +42,10 @@ test_that("unique names are deterministic", {
   expect_equal(atlas3UniqueName("x", "x"), "x (imported)")
   expect_equal(atlas3UniqueName("x", c("x", "x (imported)")), "x (imported) 2")
 })
+
+
+test_that("API key identifiers are extracted", {
+  expect_equal(atlas3KeyIdentifier("wa_1234567890abcdef_secret"), "1234567890abcdef")
+  expect_null(atlas3KeyIdentifier("not-a-key"))
+  expect_null(atlas3KeyIdentifier(NULL))
+})

@@ -1,9 +1,8 @@
 """Live integration tests against an ATLAS 3.0 deployment.
 
-These tests are skipped unless ``ATLAS3_TEST_URL`` is set. They create resources
-with a random suffix and remove them in a ``finally`` block. Set
-``ATLAS3_TEST_USERNAME`` and ``ATLAS3_TEST_PASSWORD`` for database login, or
-``ATLAS3_TEST_API_KEY`` to use an existing key.
+These tests are skipped unless ``ATLAS3_TEST_URL`` and
+``ATLAS3_TEST_API_KEY`` are set. They create resources with a random suffix and
+remove them in a ``finally`` block. The tests never revoke the supplied key.
 """
 
 from __future__ import annotations
@@ -21,13 +20,14 @@ from atlas3.bundle import CohortSetBundle
 pytestmark = pytest.mark.integration
 
 URL = os.environ.get("ATLAS3_TEST_URL")
-USERNAME = os.environ.get("ATLAS3_TEST_USERNAME")
-PASSWORD = os.environ.get("ATLAS3_TEST_PASSWORD")
 API_KEY = os.environ.get("ATLAS3_TEST_API_KEY")
 SOURCE = os.environ.get("ATLAS3_TEST_SOURCE", "EUNOMIA")
 
-if not URL:
-    pytest.skip("Set ATLAS3_TEST_URL to run integration tests", allow_module_level=True)
+if not URL or not API_KEY:
+    pytest.skip(
+        "Set ATLAS3_TEST_URL and ATLAS3_TEST_API_KEY to run integration tests",
+        allow_module_level=True,
+    )
 
 
 @pytest.fixture(scope="module")
@@ -39,18 +39,7 @@ def client() -> Atlas:
         credential_store=store,
         use_keyring=False,
     )
-    if not API_KEY:
-        if not USERNAME or not PASSWORD:
-            pytest.skip("Set ATLAS3_TEST_USERNAME/PASSWORD or ATLAS3_TEST_API_KEY")
-        atlas.login(
-            USERNAME,
-            PASSWORD,
-            key_name=f"atlas3-pytest-{uuid.uuid4().hex[:8]}",
-            store=False,
-        )
     yield atlas
-    if not API_KEY:
-        atlas.logout(revoke=True)
     atlas.close()
 
 
@@ -59,6 +48,8 @@ def test_discovery_and_identity(client: Atlas) -> None:
     assert client.api_url.endswith("/WebAPI") or "/WebAPI" in client.api_url
     me = client.whoami()
     assert me.user.login
+    # The only accepted login mechanism is an API key.
+    client.login(API_KEY, store=False)
 
 
 def test_sources_and_vocabulary(client: Atlas) -> None:

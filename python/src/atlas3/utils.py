@@ -13,6 +13,7 @@ from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
 _VERSION_RE = re.compile(r"^(?:v)?(\d+)\.(\d+)(?:\.(\d+))?(?:[-+].*)?$", re.IGNORECASE)
+_API_KEY_RE = re.compile(r"^wa_([0-9a-fA-F]{16})_[A-Za-z0-9_-]+$")
 
 
 def utc_now() -> datetime:
@@ -216,3 +217,16 @@ def redact_key(key: str | None) -> str:
     if len(key) <= 12:
         return "***"
     return f"{key[:7]}...{key[-4:]}"
+
+
+def api_key_identifier(api_key: str | None) -> str | None:
+    """Return the public identifier portion of an ATLAS API key.
+
+    ATLAS keys have the form ``wa_<16 hex chars>_<secret>``. The identifier is
+    not secret and is used only to revoke the key. Returns ``None`` for values
+    that do not match the expected shape.
+    """
+    if not api_key:
+        return None
+    match = _API_KEY_RE.match(api_key)
+    return match.group(1) if match else None

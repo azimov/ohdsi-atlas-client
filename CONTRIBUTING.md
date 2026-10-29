@@ -33,7 +33,7 @@ mypy src
 
 ```bash
 cd r
-Rscript -e 'install.packages(c("devtools", "roxygen2", "testthat", "httr2", "jsonlite", "checkmate", "R6", "cli"))'
+Rscript -e 'install.packages(c("devtools", "roxygen2", "testthat", "httr2", "jsonlite", "checkmate", "R6"))'
 Rscript -e 'devtools::document()'
 Rscript -e 'devtools::test()'
 R CMD build .
@@ -48,8 +48,7 @@ The integration suites exercise a real ATLAS 3.0 deployment. They are opt-in:
 
 ```bash
 export ATLAS3_TEST_URL="http://localhost:8081"   # ATLAS UI URL or /WebAPI URL
-export ATLAS3_TEST_USERNAME="admin"
-export ATLAS3_TEST_PASSWORD="admin"
+export ATLAS3_TEST_API_KEY="wa_..."
 export ATLAS3_TEST_SOURCE="EUNOMIA"
 
 cd python && pytest -m integration

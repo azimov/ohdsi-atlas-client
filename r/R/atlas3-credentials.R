@@ -54,14 +54,13 @@ Atlas3CredentialStore <- R6::R6Class(
       entry
     },
 
-    set = function(apiUrl, apiKey, login = NULL, keyIdentifier = NULL) {
+    set = function(apiUrl, apiKey, keyIdentifier = NULL) {
       checkmate::assertString(apiKey, min.chars = 1)
       key <- private$key(apiUrl)
       entry <- list(
         apiKey = apiKey,
         apiUrl = apiUrl,
-        login = login,
-        keyIdentifier = keyIdentifier,
+        keyIdentifier = keyIdentifier %||% atlas3KeyIdentifier(apiKey),
         createdAt = atlas3NowIso()
       )
       if (self$useKeyring) {

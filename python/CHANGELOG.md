@@ -11,7 +11,7 @@ and the project uses [Semantic Versioning](https://semver.org/).
 ### Added
 
 * URL discovery for ATLAS UI / WebAPI roots, with a hard ATLAS 3.0 version gate.
-* Database login that provisions and stores a personal WebAPI API key.
+* API-key-only authentication with optional keyring/file storage.
 * Credential storage in the OS keyring with a `0600` file fallback.
 * Typed resources for sources, concepts, concept sets, cohorts, CDM results,
   jobs, tags, cohort characterizations, feature analyses, incidence rates,

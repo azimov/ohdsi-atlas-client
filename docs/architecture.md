@@ -12,9 +12,9 @@
         |                                                 |
 +-------v--------+                               +--------v--------+
 |  Discovery     |                               |  HTTP transport |
-|  /info         |                               |  headers        |
-|  /auth/providers|                              |  retries        |
-|  version gate  |                               |  errors         |
+|  /info         |                               |  X-API-KEY      |
+|  version gate  |                               |  retries        |
+|                |                               |  errors         |
 +----------------+                               +-----------------+
                                  |
         +------------------------+------------------------+
@@ -35,7 +35,7 @@
 ```
 src/atlas3/
   client.py          AtlasClient, login, resources, request/call
-  discovery.py       URL candidates, /info, version gate, auth providers
+  discovery.py       URL candidates, /info, version gate
   credentials.py     keyring + 0600 JSON fallback
   http.py            httpx transport, retry policy, error mapping
   models.py          pydantic models for the typed resources
@@ -126,8 +126,9 @@ discovery gate (`>= 3.0.0`) and documented in the README.
   unknown fields survive.
 * **No hidden global state.** Credentials live on the client instance and in
   the credential store; there is no package-global token environment.
-* **No browser automation.** The clients automate database login and API-key
-  creation, not OAuth browser flows.
+* **API keys only.** The clients do not implement password, JWT, OAuth, or
+  browser login. A key is supplied by the caller or loaded from the credential
+  store; `login()` only validates and stores that key.
 * **Client-side cohort sets.** WebAPI has no set resource; implementing the
   bundle in both languages keeps behavior identical and avoids a server-side
   migration.

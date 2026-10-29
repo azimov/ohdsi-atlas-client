@@ -4,8 +4,7 @@ All examples expect a live ATLAS 3.0 deployment.
 
 ```bash
 export ATLAS3_URL=https://atlas.example.org
-export ATLAS3_USERNAME=admin
-export ATLAS3_PASSWORD=admin
+export ATLAS3_API_KEY=wa_...
 export ATLAS3_SOURCE=EUNOMIA
 
 python examples/python-quickstart.py

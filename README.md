@@ -26,13 +26,11 @@ OHDSI tools.
 
 * **Give it a URL.** `Atlas("https://atlas.example.org")` discovers the WebAPI
   root (including the common `/atlas` + `/WebAPI` reverse-proxy layout), checks
-  the server version, reads the enabled authentication providers, and reuses a
-  stored key when one exists.
-* **Let it get a key.** If the server uses database authentication, one call
-  logs in and provisions a personal **API key** through
-  `POST /user/apikeys`. The plaintext key is shown once by WebAPI; the client
-  stores it in the OS keyring (Python) or a permission-restricted file and
-  never logs it.
+  the server version, and reuses a stored API key when one exists.
+* **API keys only.** Pass a personal **API key** (`wa_...`) or store one with
+  `login(api_key)`. There are no username/password or JWT login paths. Keys
+  live in the OS keyring (Python/R) or a permission-restricted file and are
+  never logged.
 * **Cohort definition sets, not just cohorts.** Export a set of cohort
   definitions plus every embedded concept set into one portable JSON/ZIP
   bundle; import it into another ATLAS instance with conflict handling and ID
@@ -55,10 +53,10 @@ OHDSI tools.
 ```python
 from atlas3 import Atlas
 
-atlas = Atlas("https://atlas.example.org")   # discovers /WebAPI, checks >= 3.0
-atlas.login("my.user", "my.password")        # creates and stores an API key
-# ...or pass an existing key:
-# atlas = Atlas("https://atlas.example.org", api_key="wa_...")
+atlas = Atlas("https://atlas.example.org", api_key="wa_...")  # checks >= 3.0
+# ...or store a key for later:
+# atlas = Atlas("https://atlas.example.org")
+# atlas.login("wa_...")
 
 print(atlas.version)                         # "3.0.0"
 print([s.source_key for s in atlas.sources.list()])
@@ -88,9 +86,10 @@ pip install "atlas3[circe,keyring]"
 ```r
 library(Atlas3)
 
-atlas <- connectAtlas("https://atlas.example.org")  # discovers /WebAPI, checks >= 3.0
-atlas$login("my.user", "my.password")               # creates and stores an API key
-# ...or: connectAtlas(url, apiKey = "wa_...")
+atlas <- connectAtlas("https://atlas.example.org", apiKey = "wa_...")
+# ...or store a key for later:
+# atlas <- connectAtlas("https://atlas.example.org")
+# atlas$login("wa_...")
 
 atlas$version
 vapply(atlas$sources$list(), `[[`, "", "sourceKey")
@@ -111,32 +110,30 @@ atlas$cohortSets$import("my-cohort-set.json", onConflict = "rename")
 
 ## Authentication model
 
-ATLAS 3.0 WebAPI supports several authentication providers. The clients focus
-on the two that can be automated safely:
+Both clients authenticate with **personal API keys only**. They do not accept
+database passwords, OAuth browser sessions, or JWTs.
 
-1. **Personal API keys** (`X-API-KEY: wa_<id>_<secret>`), created by
-   `POST /WebAPI/user/apikeys`. This is the recommended mode for scripts.
-2. **Database login** (`POST /WebAPI/user/login/db`) used once to obtain a JWT
-   that is immediately exchanged for an API key.
+Every request sends:
 
-The login flow is:
-
-```
-URL -> /WebAPI/info -> version check
-    -> /WebAPI/auth/providers -> provider discovery
-    -> POST /user/login/db (JWT)
-    -> POST /user/apikeys   (raw key, returned once)
-    -> store keyring / 0600 config file
-    -> all later calls use X-API-KEY
+```http
+X-API-KEY: wa_<identifier>_<secret>
 ```
 
-OAuth/OIDC deployments are supported by supplying an existing API key or JWT
-(`Atlas(url, bearer_token=...)` in Python, `connectAtlas(url, bearerToken=...)`
-in R). Creating a key in those deployments requires an authenticated session
-through the ATLAS UI; the clients do not scrape browser cookies.
+A key is supplied in this order:
 
-See [`docs/authentication.md`](docs/authentication.md) for details and threat
-model.
+1. the `api_key` / `apiKey` constructor argument;
+2. the `ATLAS3_API_KEY` environment variable;
+3. a key stored by `login(api_key)` in the OS keyring or a `0600` credentials
+   file;
+4. otherwise the client is anonymous (WebAPI may return `200` with empty data;
+   that is not authorization).
+
+Create a key in ATLAS under the user menu → **API keys**. The plaintext key is
+shown once. The client cannot create a key from a username/password because
+that would require supporting password login.
+
+See [`docs/authentication.md`](docs/authentication.md) for key storage,
+revocation, and troubleshooting.
 
 ## Cohort definition sets
 

@@ -42,6 +42,10 @@ that they are identical and that the count is 344.
 | `featureextraction` | 1 | default covariate settings |
 | `person` | 1 | person profile |
 
+The high-level clients authenticate with API keys only. The catalog still
+contains WebAPI's login and provider endpoints for completeness and for raw
+`request()` calls, but neither package implements password or JWT login.
+
 ## Core recipes
 
 ### Concepts and counts

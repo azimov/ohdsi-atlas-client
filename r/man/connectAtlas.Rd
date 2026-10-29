@@ -7,23 +7,18 @@
 connectAtlas(
   url,
   apiKey = NULL,
-  bearerToken = NULL,
   profile = "default",
   timeout = 60,
   discovery = NULL,
   credentialStore = NULL,
-  useKeyring = TRUE,
-  autoLogin = FALSE,
-  username = NULL,
-  password = NULL
+  useKeyring = TRUE
 )
 }
 \arguments{
 \item{url}{ATLAS UI URL, WebAPI URL, or bare host name.}
 
-\item{apiKey}{Optional personal API key (\code{wa_...}).}
-
-\item{bearerToken}{Optional JWT.}
+\item{apiKey}{Personal API key (\code{wa_...}). If omitted, \code{ATLAS3_API_KEY} or
+a stored key is used.}
 
 \item{profile}{Credential-store profile name.}
 
@@ -31,18 +26,10 @@ connectAtlas(
 
 \item{discovery}{Optional pre-built discovery result (used in tests).}
 
-\item{credentialStore}{Optional \code{Atlas3CredentialStore}.}
+\item{credentialStore}{Optional credential store.}
 
 \item{useKeyring}{Prefer the OS keyring when the \code{keyring} package is
 installed.}
-
-\item{autoLogin}{Log in with \code{ATLAS3_USERNAME} / \code{ATLAS3_PASSWORD} when no
-credential is available.}
-
-\item{username}{Optional login name; when supplied, the client logs in and
-provisions an API key immediately.}
-
-\item{password}{Optional password used only for that login.}
 }
 \value{
 An Atlas3 client object.
@@ -50,11 +37,11 @@ An Atlas3 client object.
 \description{
 Discovers the WebAPI root, checks that the server is ATLAS/WebAPI 3.0 or
 newer, and returns an \link{Atlas3} client. Supply an \code{apiKey} to skip credential
-lookup, or call \verb{$login()} afterwards to create and store one.
+lookup, or call \verb{$login(apiKey)} afterwards to validate and store one.
 }
 \examples{
 \dontrun{
-atlas <- connectAtlas("https://atlas.example.org")
+atlas <- connectAtlas("https://atlas.example.org", apiKey = "wa_...")
 atlas$sources$list()
 }
 }

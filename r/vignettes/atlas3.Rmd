@@ -30,19 +30,15 @@ atlas
 Discovery tries the common layouts: `/WebAPI`, `/webapi`, a direct WebAPI
 root, and `/atlas/WebAPI`. The client refuses WebAPI 2.x.
 
-If the deployment uses database authentication, log in once. The client
-creates a personal API key (returned only once by WebAPI) and stores it in the
-OS keyring when available.
-
-```{r}
-atlas$login("my.user", "my.password")
-atlas$whoami()
-```
-
-Existing keys can be supplied directly:
+Authentication uses a personal API key only. Supply one directly, or store it
+for later with `login()`:
 
 ```{r}
 atlas <- connectAtlas("https://atlas.example.org", apiKey = "wa_...")
+# or
+atlas <- connectAtlas("https://atlas.example.org")
+atlas$login("wa_...")
+atlas$whoami()
 ```
 
 # Sources and vocabulary

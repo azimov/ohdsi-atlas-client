@@ -7,10 +7,8 @@ contract used by tests and reviews.
 | Capability | Python | R |
 |---|---|---|
 | Connect from URL | `Atlas(url)` | `connectAtlas(url)` |
-| Existing key | `Atlas(url, api_key=...)` | `connectAtlas(url, apiKey = ...)` |
-| Existing JWT | `Atlas(url, bearer_token=...)` | `connectAtlas(url, bearerToken = ...)` |
-| Login + create key | `atlas.login(user, pass)` | `atlas$login(user, pass)` |
-| JWT -> key | `atlas.login_with_jwt(jwt, create_api_key=True)` | `atlas$loginWithJwt(jwt, createApiKey = TRUE)` |
+| Existing API key | `Atlas(url, api_key=...)` | `connectAtlas(url, apiKey = ...)` |
+| Validate + store key | `atlas.login(api_key)` | `atlas$login(apiKey)` |
 | Current user | `atlas.whoami()` | `atlas$whoami()` |
 | Logout | `atlas.logout(revoke=True)` | `atlas$logout(revoke = TRUE)` |
 | Sources | `atlas.sources.list()` | `atlas$sources$list()` |
@@ -66,6 +64,8 @@ contract used by tests and reviews.
 * **Integrity digest.** Both sides compute SHA-256 over a canonical form of the
   bundle, but the canonicalisation is language-specific. The digest is
   self-consistent; it is not a cross-language byte comparison.
+* **Authentication.** Both clients accept only personal API keys. There is no
+  username/password or JWT login in either language.
 * **Circepy.** Only Python has optional Circepy model conversion and local
   validation/SQL generation. R sends expressions as lists and uses WebAPI's
   `/check` and `/sql` endpoints.

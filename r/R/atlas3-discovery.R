@@ -52,14 +52,13 @@ atlas3AtlasUrl <- function(url, apiUrl) {
 
 #' Discover an ATLAS 3.0 WebAPI
 #'
-#' Probes the common ATLAS/WebAPI URL layouts, checks the server version, and
-#' reads the enabled authentication providers. Most users should call
-#' [connectAtlas()] instead.
+#' Probes the common ATLAS/WebAPI URL layouts and checks the server version.
+#' Most users should call [connectAtlas()] instead.
 #'
 #' @param url ATLAS UI URL, WebAPI URL, or bare host name.
 #' @param timeout Per-candidate timeout in seconds.
 #' @return An object of class `atlas3_discovery` with `inputUrl`, `apiUrl`,
-#'   `atlasUrl`, `version`, `buildInfo`, `configuration`, and `authProviders`.
+#'   `atlasUrl`, `version`, `buildInfo`, and `configuration`.
 #' @export
 #' @examples
 #' \dontrun{
@@ -120,25 +119,6 @@ discoverAtlas <- function(url, timeout = 10) {
     )
   }
 
-  providers <- tryCatch(
-    {
-      response <- atlas3HttpGet(paste0(apiUrl, "/auth/providers"), timeout = timeout)
-      if (response$status == 200L && is.list(response$body)) {
-        lapply(response$body, function(provider) {
-          list(
-            name = provider$name %||% "",
-            url = provider$url %||% NULL,
-            ajax = isTRUE(provider$ajax),
-            useCredentialsForm = isTRUE(provider$useCredentialsForm)
-          )
-        })
-      } else {
-        list()
-      }
-    },
-    error = function(e) list()
-  )
-
   structure(
     list(
       inputUrl = atlas3NormalizeUrl(url),
@@ -146,8 +126,7 @@ discoverAtlas <- function(url, timeout = 10) {
       atlasUrl = atlas3AtlasUrl(url, apiUrl),
       version = version,
       buildInfo = info$buildInfo %||% list(),
-      configuration = info$configuration %||% list(),
-      authProviders = providers
+      configuration = info$configuration %||% list()
     ),
     class = "atlas3_discovery"
   )
@@ -159,8 +138,6 @@ print.atlas3_discovery <- function(x, ...) {
   cat("  ATLAS:  ", x$atlasUrl, "\n", sep = "")
   cat("  WebAPI: ", x$apiUrl, "\n", sep = "")
   cat("  Version:", x$version, "\n", sep = " ")
-  providers <- vapply(x$authProviders, function(provider) provider$name, character(1))
-  cat("  Auth:   ", paste(providers, collapse = ", "), "\n", sep = "")
   invisible(x)
 }
 
@@ -177,7 +154,6 @@ atlas3DiscoveryFromList <- function(value) {
       class = "atlas3_unsupported_version_error"
     )
   }
-  value$authProviders <- value$authProviders %||% list()
   structure(value, class = "atlas3_discovery")
 }
 

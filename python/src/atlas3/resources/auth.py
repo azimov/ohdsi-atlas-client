@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from ..models import ApiKey, CurrentUser, Permission, Role, User
-from ..utils import jsonable
 from .base import Resource
 
 
@@ -15,10 +12,6 @@ class AuthResource(Resource):
     def me(self) -> CurrentUser:
         """Return the current user and authorization summary."""
         return CurrentUser.model_validate(self._get("/user/me"))
-
-    def providers(self) -> list[dict[str, Any]]:
-        """Return the authentication providers advertised by WebAPI."""
-        return self._get("/auth/providers") or []
 
     def api_keys(self) -> list[ApiKey]:
         """List the current user's API keys (no secrets)."""
@@ -135,11 +128,3 @@ class AuthResource(Resource):
     def assign_role(self, user_id: int, role_id: int) -> None:
         """Assign a role to a user (admin)."""
         self._put(f"/user/{user_id}/role/{role_id}")
-
-    def run_as(self, login: str) -> dict[str, Any]:
-        """Impersonate a user (requires ``admin:run-as``)."""
-        return self._post("/user/runas", params={"login": login}) or {}
-
-
-def _json(value: Any) -> Any:
-    return jsonable(value)

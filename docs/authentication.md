@@ -1,36 +1,45 @@
-# Authentication and URL discovery
+# Authentication
+
+Both clients authenticate with **personal API keys only**. They do not accept
+database passwords, OAuth browser sessions, or JWTs.
 
 ## The short version
 
 ```python
 from atlas3 import Atlas
 
+atlas = Atlas("https://atlas.example.org", api_key="wa_...")
+# or store a key for later:
 atlas = Atlas("https://atlas.example.org")
-atlas.login("user", "password")       # creates + stores a personal API key
+atlas.login("wa_...")
 ```
 
 ```r
 library(Atlas3)
 
+atlas <- connectAtlas("https://atlas.example.org", apiKey = "wa_...")
+# or store a key for later:
 atlas <- connectAtlas("https://atlas.example.org")
-atlas$login("user", "password")       # creates + stores a personal API key
+atlas$login("wa_...")
 ```
 
-After the first login both clients send `X-API-KEY: wa_<id>_<secret>` on every
-request. The password is used once and never stored.
+Every request sends:
 
-For a one-call setup:
-
-```python
-atlas = Atlas("https://atlas.example.org", username="user", password="password")
+```http
+X-API-KEY: wa_<identifier>_<secret>
 ```
 
-```r
-atlas <- connectAtlas("https://atlas.example.org",
-                      username = "user", password = "password")
-```
+## 1. Get an API key
 
-## 1. URL discovery
+Create a key in ATLAS under the user menu → **API keys** (the screen backed by
+`GET/POST /WebAPI/user/apikeys`). The plaintext key is shown **once**; copy it
+into a secret manager or pass it to the client.
+
+Ask an administrator if the deployment hides API-key creation or if you need a
+service account key. The client cannot create a key from a username/password,
+because that would require supporting password login.
+
+## 2. URL discovery
 
 Users know the URL of the ATLAS UI, which is not necessarily the WebAPI root.
 Both clients probe a small, ordered list of candidates and accept the first
@@ -50,161 +59,115 @@ https://host/atlas/      -> ATLAS 3 UI (static SPA)
 https://host/WebAPI/...  -> WebAPI 3 (JSON)
 ```
 
-Both clients also accept a direct WebAPI root, which is useful when ATLAS and
-WebAPI are on different ports or hosts.
-
-### Version gate
-
 The discovered version must be `>= 3.0.0`. The parsers accept
 `3.0.0-SNAPSHOT`, `v3.1`, and similar suffixes. A WebAPI 2.x deployment raises
 `UnsupportedVersionError` (Python) / `atlas3_unsupported_version_error` (R)
-with the detected version and URL. There is no 2.x compatibility mode.
+with the detected version and URL.
 
-## 2. Authentication providers
+## 3. Supplying a key
 
-ATLAS 3.0 exposes the enabled providers at `GET /WebAPI/auth/providers`. The
-clients read them during discovery and look for a provider whose name is `DB`
-or whose URL contains `login/db`. A typical response is:
+In priority order:
 
-```json
-[
-  {
-    "name": "DB",
-    "url": "user/login/db",
-    "ajax": true,
-    "useCredentialsForm": true
-  }
-]
+1. The `api_key` argument (Python) / `apiKey` argument (R).
+2. The `ATLAS3_API_KEY` environment variable.
+3. A key stored by `login()` in the OS keyring or credentials file.
+4. No key: the client is anonymous. WebAPI may still answer `200` with empty
+   data; that is not authorization.
+
+One-call use:
+
+```python
+import os
+atlas = Atlas("https://atlas.example.org", api_key=os.environ["ATLAS3_API_KEY"])
 ```
 
-The clients deliberately automate only two flows:
-
-1. **Personal API keys** (recommended for scripts and CI).
-2. **Database login**, used once to obtain a JWT that is immediately exchanged
-   for an API key.
-
-OAuth/OIDC, LDAP, Windows/AD, and Kerberos deployments are supported by
-supplying an existing key or JWT. Creating a key inside those deployments
-requires an authenticated browser session; the clients do not scrape browser
-cookies or automate a browser login.
-
-## 3. The API-key flow
-
-```
-POST /WebAPI/user/login/db
-     Content-Type: application/x-www-form-urlencoded
-     login=user&password=...
-  -> { "login": "user", "jwt": "...", "roles": [...] }
-
-POST /WebAPI/user/apikeys
-     Authorization: Bearer <jwt>
-     { "name": "atlas3-python", "description": "...", "expiresInDays": null }
-  -> { "rawKey": "wa_<identifier>_<secret>", "keyIdentifier": "<identifier>", ... }
-
-GET /WebAPI/user/me
-     X-API-KEY: wa_...
-  -> { "user": {...}, "authz": { "permissions": [...] } }
+```r
+atlas <- connectAtlas("https://atlas.example.org",
+                      apiKey = Sys.getenv("ATLAS3_API_KEY"))
 ```
 
-`rawKey` is returned **once**. The clients store it and never print it.
-`GET /user/apikeys` (using a valid key) lists key metadata and can be used to
-audit or revoke keys.
+### `login(api_key)`
 
-### API-key header
+`login()` validates the key against `GET /user/me` before storing it. An
+invalid key raises an authentication error and leaves any previously configured
+key unchanged.
 
-The header is `X-API-KEY` (HTTP header names are case-insensitive, so
-`X-Api-Key` also works). The clients do not send API keys as
-`Authorization: Bearer`; that header is reserved for JWTs.
+```python
+atlas = Atlas("https://atlas.example.org")
+atlas.login("wa_...", store=True)
+```
 
-## 4. Credential storage
+```r
+atlas <- connectAtlas("https://atlas.example.org")
+atlas$login("wa_...", store = TRUE)
+```
 
-### Python
+### Stored credentials
 
-1. `ATLAS3_API_KEY` environment variable (highest priority, never written).
+**Python**
+
+1. `ATLAS3_API_KEY` (never written).
 2. OS keyring via the optional `keyring` package (`atlas3` service).
-3. the platform config directory (`platformdirs.user_config_dir("atlas3")`) with mode `0600`.
+3. The platform config directory (`platformdirs.user_config_dir("atlas3")`)
+   with mode `0600`.
 
-The file is keyed by profile and WebAPI URL. Passwords are never stored.
-`Atlas(..., use_keyring=False)` forces the file backend, which is useful in
-containers without a D-Bus/Keychain service.
+Pass `Atlas(..., use_keyring=False)` to force the file backend, which is useful
+in containers without a D-Bus/Keychain service.
 
-### R
+**R**
 
-1. `ATLAS3_API_KEY` environment variable.
+1. `ATLAS3_API_KEY`.
 2. OS keyring via the optional `keyring` package (`atlas3` service).
 3. `tools::R_user_dir("Atlas3", "config")/credentials.json` with mode `0600`.
 
 `keyring` is in `Suggests`; if it is not installed the file backend is used.
 `connectAtlas(..., useKeyring = FALSE)` forces the file backend.
 
-## 5. Non-interactive use
+Only the key and its public identifier are stored. There is no password field.
 
-```bash
-export ATLAS3_URL=https://atlas.example.org
-export ATLAS3_USERNAME=svc_atlas
-export ATLAS3_PASSWORD=...
-atlas3 sources
-```
-
-```r
-atlas <- connectAtlas(Sys.getenv("ATLAS3_URL"), autoLogin = TRUE)
-```
-
-For CI, prefer a pre-created short-lived API key:
-
-```bash
-export ATLAS3_API_KEY=wa_...
-```
-
-```r
-atlas <- connectAtlas(Sys.getenv("ATLAS3_URL"))
-```
-
-## 6. Existing JWT
-
-OAuth/OIDC users can paste a JWT from their browser session:
-
-```python
-atlas = Atlas(url, bearer_token=jwt)
-# or exchange it for a long-lived key:
-atlas.login_with_jwt(jwt, create_api_key=True)
-```
-
-```r
-atlas <- connectAtlas(url, bearerToken = jwt)
-atlas$loginWithJwt(jwt, createApiKey = TRUE)
-```
-
-## 7. Anonymous access is not authorization
-
-WebAPI can allow anonymous access while still returning `200` for many
-endpoints. For example, `GET /source/sources` and `GET /user/me` may return
-empty results and an anonymous user. A `200` response does **not** mean the
-request was authorized. Check `whoami()` / `whoami()$user$login` and the
-permission list when a call unexpectedly returns nothing.
-
-## 8. Revocation
+## 4. Key rotation and revocation
 
 ```python
 atlas.logout(revoke=True)     # DELETE /user/apikeys/{id}?remove=true, then clear store
+atlas.set_api_key("wa_new...")
 ```
 
 ```r
 atlas$logout(revoke = TRUE)
+atlas$login("wa_new...")
 ```
 
-If the key identifier is unknown, the local credential is still removed but
-the server-side key must be revoked from ATLAS or with
-`GET /user/apikeys` + `DELETE /user/apikeys/{id}`.
+The identifier is the 16-hex-character segment in `wa_<identifier>_<secret>`.
+If the client cannot parse the identifier (for example a key from a custom
+format), it removes the local credential but leaves server-side revocation to
+the ATLAS UI.
 
-## 9. Threat model
+## 5. Anonymous access is not authorization
+
+WebAPI can allow anonymous access while still returning `200` for many
+endpoints. `GET /source/sources` and `GET /user/me` may return empty results and
+an anonymous user. A `200` response does **not** mean the request was
+authorized. Check `whoami()` / `whoami()$user$login` and the permission list
+when a call unexpectedly returns nothing.
+
+## 6. Troubleshooting
+
+| Symptom | Cause / fix |
+|---|---|
+| `401 Invalid or expired API key` | Key is wrong, disabled, or expired. Create a new one in ATLAS. |
+| `403 Access Denied` | Key is valid but the user/role lacks permission or source access. |
+| Empty lists with `200` | Anonymous access. Supply a key. |
+| `Could not discover ... /WebAPI` | Pass the ATLAS UI URL or the exact `/WebAPI` root. |
+| `UnsupportedVersionError` | The deployment is WebAPI 2.x; these clients require 3.0+. |
+| Key works in the UI but not the CLI | Check the key was copied completely and has no trailing newline. |
+
+## 7. Threat model
 
 * API keys are bearer credentials. Anyone with a key can act as the user until
   it expires or is revoked.
-* The clients never log keys, passwords, or `Authorization` headers.
+* The clients never log keys or `X-API-KEY` headers.
 * TLS verification is always on in R. Python exposes `verify=False` only for
   local development; do not use it against a production server.
 * The credential file is created with `0600`; the directory is created with
   user-only permissions where the OS allows it.
-* A compromised workstation with access to the keyring/file can read the key.
-  Use short-lived keys and revoke them when a machine is retired.
+* Use short-lived keys in CI and revoke them when a machine is retired.

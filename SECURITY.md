@@ -23,8 +23,7 @@ within five business days.
 * R stores keys in the OS keyring when the optional `keyring` package is
   installed, otherwise in `tools::R_user_dir("Atlas3", "config")` with mode
   `0600`.
-* Environment variables `ATLAS3_API_KEY`, `ATLAS3_USERNAME`, and
-  `ATLAS3_PASSWORD` are supported for CI. Prefer short-lived keys in CI.
+* `ATLAS3_API_KEY` is supported for CI. Prefer short-lived keys in CI.
 * Use `atlas.logout(revoke=True)` / `atlas$logout(revoke = TRUE)` to revoke the
   key server-side and remove it locally.
 

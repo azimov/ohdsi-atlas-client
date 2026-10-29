@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import getpass
 import logging
 import os
-import sys
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -14,7 +12,7 @@ from ._version import __version__
 from .credentials import Credential, CredentialStore, credential_from_key
 from .discovery import Discovery, discover
 from .endpoints import EndpointCatalog
-from .exceptions import AuthenticationError, ConfigurationError
+from .exceptions import ConfigurationError
 from .http import HttpClient
 from .models import CurrentUser, Info, User
 from .resources.analyses import (
@@ -43,11 +41,9 @@ from .resources.misc import (
 )
 from .resources.sources import SourcesResource
 from .resources.tags import TagsResource
-from .utils import normalize_url, redact_key
+from .utils import api_key_identifier, normalize_url, redact_key
 
 logger = logging.getLogger("atlas3")
-
-DEFAULT_KEY_NAME = "atlas3-python"
 
 
 class AtlasClient:
@@ -57,30 +53,26 @@ class AtlasClient:
         url: ATLAS UI URL, WebAPI URL, or bare host. Discovery appends the
             common ``/WebAPI`` context when necessary.
         api_key: Personal API key (``wa_...``). Sent as ``X-API-KEY``.
-        bearer_token: JWT for deployments where API-key creation is not
-            available. Sent as ``Authorization: Bearer``.
         profile: Credential-store profile, useful for multiple environments.
         timeout: Request timeout in seconds.
         verify: Verify TLS certificates.
         use_keyring: Prefer the OS keyring for credential storage.
         discovery: Pre-built :class:`Discovery` (mainly for tests).
-        auto_login: If true, call :meth:`login` using ``ATLAS3_USERNAME`` and
-            ``ATLAS3_PASSWORD`` when no credential is available.
-        username: Optional login name; when supplied, the client logs in and
-            provisions an API key immediately.
-        password: Optional password used only for that login.
+        credential_store: Optional credential store.
 
     Example:
-        >>> atlas = AtlasClient("https://atlas.example.org")
-        >>> atlas.login("user", "password")
+        >>> atlas = AtlasClient("https://atlas.example.org", api_key="wa_...")
         >>> atlas.sources.list()
+
+    Authenticate with an API key only. Create a key in ATLAS under
+    "My Account" / API keys, or ask an administrator. The client does not
+    accept database passwords or JWTs.
     """
 
     def __init__(
         self,
         url: str,
         api_key: str | None = None,
-        bearer_token: str | None = None,
         *,
         profile: str = "default",
         timeout: float = 60.0,
@@ -88,9 +80,6 @@ class AtlasClient:
         use_keyring: bool = True,
         discovery: Discovery | None = None,
         credential_store: CredentialStore | None = None,
-        auto_login: bool = False,
-        username: str | None = None,
-        password: str | None = None,
     ) -> None:
         self.url = normalize_url(url)
         self.profile = profile
@@ -105,8 +94,7 @@ class AtlasClient:
         self._catalog: EndpointCatalog | None = None
 
         resolved_key = api_key or os.environ.get("ATLAS3_API_KEY")
-        resolved_bearer = bearer_token
-        if not resolved_key and not resolved_bearer:
+        if not resolved_key:
             stored = self._credential_store.get(self.discovery.api_url)
             if stored is not None:
                 self._credential = stored
@@ -116,17 +104,10 @@ class AtlasClient:
         self._http = HttpClient(
             self.discovery.api_url,
             api_key=resolved_key,
-            bearer_token=resolved_bearer,
             timeout=timeout,
             verify=verify,
             user_agent=f"atlas3-python/{__version__}",
         )
-
-        if auto_login and not resolved_key and not resolved_bearer:
-            self.login(
-                os.environ.get("ATLAS3_USERNAME"),
-                os.environ.get("ATLAS3_PASSWORD"),
-            )
 
         # Resource namespaces
         self.sources = SourcesResource(self)
@@ -151,9 +132,6 @@ class AtlasClient:
         self.ddl = DdlResource(self)
         self.evidence = EvidenceResource(self)
         self.statistic = StatisticResource(self)
-
-        if username is not None or password is not None:
-            self.login(username, password)
 
     # -- discovery and identity --------------------------------------------
 
@@ -193,8 +171,8 @@ class AtlasClient:
 
     @property
     def is_authenticated(self) -> bool:
-        """Whether the client currently has an API key or bearer token."""
-        return bool(self._api_key or self._http.bearer_token)
+        """Whether the client currently has an API key."""
+        return bool(self._api_key)
 
     def info(self) -> Info:
         """Return server version and build information."""
@@ -226,214 +204,65 @@ class AtlasClient:
 
     # -- authentication -----------------------------------------------------
 
-    def login(
-        self,
-        username: str | None = None,
-        password: str | None = None,
-        *,
-        key_name: str = DEFAULT_KEY_NAME,
-        description: str | None = None,
-        expires_in_days: int | None = None,
-        store: bool = True,
-        create_api_key: bool = True,
-    ) -> CurrentUser:
-        """Authenticate with database credentials and provision an API key.
+    def login(self, api_key: str, *, store: bool = True) -> CurrentUser:
+        """Use and optionally store a personal API key.
 
-        The password is used only for the login request; it is never stored.
-        With ``create_api_key=True`` (the default), the returned JWT is
-        immediately exchanged for a personal API key, which is stored in the
-        keyring or a ``0600`` credentials file.
+        The key is validated against ``GET /user/me`` before it is persisted.
+        There is no username/password or JWT login; create a key in ATLAS
+        under "My Account" / API keys, or ask an administrator.
 
         Args:
-            username: Login name. Defaults to ``ATLAS3_USERNAME``.
-            password: Password. Defaults to ``ATLAS3_PASSWORD`` or a prompt.
-            key_name: Label shown in ATLAS for the new key.
-            description: Optional key description.
-            expires_in_days: Key lifetime; ``None`` or 0 means no expiry.
-            store: Whether to persist the new key.
-            create_api_key: If false, keep the JWT as a bearer token instead.
+            api_key: Personal API key in the form ``wa_<id>_<secret>``.
+            store: Persist the key in the keyring or credentials file.
 
         Raises:
-            AuthenticationError: If credentials are rejected or DB auth is
-                not enabled.
-            ConfigurationError: If credentials are missing in a
-                non-interactive session.
+            ConfigurationError: If ``api_key`` is empty.
+            AuthenticationError: If WebAPI rejects the key.
         """
-        username = username or os.environ.get("ATLAS3_USERNAME")
-        password = password or os.environ.get("ATLAS3_PASSWORD")
-        if not username:
-            if not sys.stdin.isatty():
-                raise ConfigurationError("No username supplied and ATLAS3_USERNAME is not set")
-            username = input("ATLAS3 username: ")
-        if not password:
-            if not sys.stdin.isatty():
-                raise ConfigurationError("No password supplied and ATLAS3_PASSWORD is not set")
-            password = getpass.getpass("ATLAS3 password: ")
-
-        provider = self._database_provider()
-        login_path = provider.get("url") or "user/login/db"
-        auth_http = HttpClient(
-            self.api_url,
-            timeout=self.timeout,
-            verify=self.verify,
-            user_agent=f"atlas3-python/{__version__}",
-        )
+        value = (api_key or "").strip()
+        if not value:
+            raise ConfigurationError("api_key must not be empty")
+        previous = self._api_key
+        self._api_key = value
+        self._http.api_key = value
+        self._current_user = None
         try:
-            try:
-                result = auth_http.request(
-                    "POST",
-                    f"/{str(login_path).lstrip('/')}",
-                    data={"login": username, "password": password},
-                    headers={"Content-Type": "application/x-www-form-urlencoded"},
-                )
-            except AuthenticationError as exc:
-                raise AuthenticationError(
-                    f"Database login failed for {username!r}: {exc.args[0]}"
-                ) from exc
-            jwt = (result or {}).get("jwt")
-            if not jwt:
-                raise AuthenticationError(
-                    "WebAPI did not return a JWT. Check that database "
-                    "authentication is enabled and the credentials are correct."
-                )
-            auth_http.bearer_token = str(jwt)
-            if create_api_key:
-                key = auth_http.request(
-                    "POST",
-                    "/user/apikeys",
-                    json={
-                        "name": key_name,
-                        "description": description,
-                        "expiresInDays": expires_in_days,
-                    },
-                )
-                raw_key = (key or {}).get("rawKey")
-                if not raw_key:
-                    raise AuthenticationError("WebAPI created an API key but did not return it")
-                self._api_key = str(raw_key)
-                self._http.api_key = self._api_key
-                self._http.bearer_token = None
-                credential = credential_from_key(
-                    self._api_key,
-                    self.api_url,
-                    login=str((result or {}).get("login") or username),
-                    key_identifier=(key or {}).get("keyIdentifier"),
-                )
-                self._credential = credential
-                if store:
-                    self._credential_store.set(credential)
-            else:
-                self._http.bearer_token = str(jwt)
-                self._http.api_key = None
-                self._api_key = None
-        finally:
-            auth_http.close()
-
-        self._current_user = self.whoami(force=True)
-        return self._current_user
-
-    def login_with_jwt(
-        self,
-        jwt: str,
-        *,
-        create_api_key: bool = False,
-        key_name: str = DEFAULT_KEY_NAME,
-        description: str | None = None,
-        expires_in_days: int | None = None,
-        store: bool = True,
-    ) -> CurrentUser:
-        """Use an existing JWT, optionally exchanging it for an API key.
-
-        This supports OAuth/OIDC deployments where a browser session produces
-        a JWT that can be pasted into a script.
-        """
-        if not jwt:
-            raise ConfigurationError("jwt must not be empty")
-        if not create_api_key:
-            self._http.bearer_token = jwt
-            self._http.api_key = None
-            self._api_key = None
-            self._current_user = self.whoami(force=True)
-            return self._current_user
-
-        auth_http = HttpClient(
-            self.api_url,
-            bearer_token=jwt,
-            timeout=self.timeout,
-            verify=self.verify,
-            user_agent=f"atlas3-python/{__version__}",
-        )
-        try:
-            key = auth_http.request(
-                "POST",
-                "/user/apikeys",
-                json={
-                    "name": key_name,
-                    "description": description,
-                    "expiresInDays": expires_in_days,
-                },
-            )
-        finally:
-            auth_http.close()
-        raw_key = (key or {}).get("rawKey")
-        if not raw_key:
-            raise AuthenticationError("WebAPI did not return a raw API key")
-        self._api_key = str(raw_key)
-        self._http.api_key = self._api_key
-        self._http.bearer_token = None
-        self._current_user = self.whoami(force=True)
-        credential = credential_from_key(
-            self._api_key,
-            self.api_url,
-            login=self._current_user.user.login,
-            key_identifier=(key or {}).get("keyIdentifier"),
-        )
+            current = self.whoami(force=True)
+        except Exception:
+            self._api_key = previous
+            self._http.api_key = previous
+            self._current_user = None
+            raise
+        credential = credential_from_key(value, self.api_url)
         self._credential = credential
         if store:
             self._credential_store.set(credential)
-        return self._current_user
-
-    def _database_provider(self) -> dict[str, Any]:
-        providers = [provider for provider in self.discovery.auth_providers if provider.is_database]
-        if not providers:
-            # Refresh discovery once; some reverse proxies hide /auth/providers
-            # from the unauthenticated probe but expose it later.
-            self._discovery = discover(
-                self.url, timeout=min(self.timeout, 15.0), verify=self.verify
-            )
-            providers = [
-                provider for provider in self.discovery.auth_providers if provider.is_database
-            ]
-        if not providers:
-            names = ", ".join(self.discovery.provider_names) or "none"
-            raise AuthenticationError(
-                "This WebAPI does not advertise database authentication "
-                f"(providers: {names}). Supply a personal API key or JWT instead."
-            )
-        provider = providers[0]
-        return {"url": provider.url or "user/login/db"}
+        return current
 
     def logout(self, *, revoke: bool = True) -> None:
-        """Revoke the stored API key (optionally) and remove local credentials."""
-        if revoke and self._credential and self._credential.key_identifier:
+        """Revoke the API key (optionally) and remove local credentials."""
+        identifier = (
+            self._credential.key_identifier
+            if self._credential is not None
+            else api_key_identifier(self._api_key)
+        )
+        if revoke and identifier:
             try:
-                self.auth.revoke_api_key(self._credential.key_identifier, remove=True)
+                self.auth.revoke_api_key(identifier, remove=True)
             except Exception:  # pragma: no cover - best effort on logout
                 logger.warning("Could not revoke API key on the server", exc_info=True)
         self._credential_store.delete(self.api_url)
         self._credential = None
         self._api_key = None
         self._http.api_key = None
-        self._http.bearer_token = None
         self._current_user = None
 
     def set_api_key(self, api_key: str, *, store: bool = False) -> None:
-        """Replace the current API key at runtime."""
+        """Replace the current API key at runtime without validating it."""
         if not api_key:
             raise ConfigurationError("api_key must not be empty")
         self._api_key = api_key
         self._http.api_key = api_key
-        self._http.bearer_token = None
         self._current_user = None
         if store:
             credential = credential_from_key(api_key, self.api_url)

@@ -40,7 +40,6 @@ class HttpClient:
         api_url: str,
         *,
         api_key: str | None = None,
-        bearer_token: str | None = None,
         timeout: float = 60.0,
         verify: bool = True,
         user_agent: str = "atlas3-python",
@@ -48,7 +47,6 @@ class HttpClient:
     ) -> None:
         self.api_url = api_url.rstrip("/")
         self.api_key = api_key
-        self.bearer_token = bearer_token
         self.timeout = timeout
         self.verify = verify
         self.user_agent = user_agent
@@ -93,7 +91,7 @@ class HttpClient:
             path: Path relative to the WebAPI root, or an absolute URL.
             params: Query parameters; ``None`` values are dropped.
             json: JSON request body.
-            data: Form data (used by database login).
+            data: Form data.
             files: Multipart uploads.
             headers: Additional request headers.
             timeout: Per-request timeout override.
@@ -175,8 +173,6 @@ class HttpClient:
         }
         if self.api_key:
             headers["X-API-KEY"] = self.api_key
-        elif self.bearer_token:
-            headers["Authorization"] = f"Bearer {self.bearer_token}"
         if extra:
             headers.update(extra)
         return headers
@@ -220,9 +216,9 @@ class HttpClient:
         status = response.status_code
         if status == 401:
             return AuthenticationError(
-                f"WebAPI rejected the credential: {message}. "
-                "Call login() / connect with a valid API key, or create one with "
-                "atlas.login(username, password).",
+                f"WebAPI rejected the API key: {message}. "
+                "Supply a valid key with Atlas(..., api_key=...) or "
+                "atlas.login(api_key).",
                 status_code=status,
             )
         if status == 403:

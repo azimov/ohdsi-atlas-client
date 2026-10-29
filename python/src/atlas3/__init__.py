@@ -4,8 +4,7 @@ Quick start::
 
     from atlas3 import Atlas
 
-    atlas = Atlas("https://atlas.example.org")
-    atlas.login("user", "password")
+    atlas = Atlas("https://atlas.example.org", api_key="wa_...")
     print(atlas.sources.list())
 """
 
@@ -22,7 +21,7 @@ from .bundle import (
 )
 from .client import Atlas, AtlasClient, connect
 from .credentials import Credential, CredentialStore
-from .discovery import AuthProvider, Discovery, discover
+from .discovery import Discovery, discover
 from .endpoints import Endpoint, EndpointCatalog
 from .exceptions import (
     Atlas3Error,
@@ -63,7 +62,6 @@ __all__ = [
     "Atlas",
     "Atlas3Error",
     "AtlasClient",
-    "AuthProvider",
     "AuthenticationError",
     "BundleError",
     "Cohort",

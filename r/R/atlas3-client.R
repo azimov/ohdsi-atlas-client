@@ -24,7 +24,6 @@ Atlas3 <- R6::R6Class(
     version = NULL,
     discovery = NULL,
     apiKey = NULL,
-    bearerToken = NULL,
     timeout = 60,
     sources = NULL,
     concepts = NULL,
@@ -50,15 +49,11 @@ Atlas3 <- R6::R6Class(
 
     initialize = function(url,
                           apiKey = NULL,
-                          bearerToken = NULL,
                           profile = "default",
                           timeout = 60,
                           discovery = NULL,
                           credentialStore = NULL,
-                          useKeyring = TRUE,
-                          autoLogin = FALSE,
-                          username = NULL,
-                          password = NULL) {
+                          useKeyring = TRUE) {
       checkmate::assertString(url, min.chars = 1)
       self$url <- atlas3NormalizeUrl(url)
       self$timeout <- timeout
@@ -79,7 +74,7 @@ Atlas3 <- R6::R6Class(
       if (identical(apiKey, NA_character_) || !nzchar(apiKey)) {
         apiKey <- NULL
       }
-      if (is.null(apiKey) && is.null(bearerToken)) {
+      if (is.null(apiKey)) {
         stored <- private$credentialStore$get(self$apiUrl)
         if (!is.null(stored$apiKey)) {
           apiKey <- stored$apiKey
@@ -87,11 +82,6 @@ Atlas3 <- R6::R6Class(
         }
       }
       self$apiKey <- apiKey
-      self$bearerToken <- bearerToken
-
-      if (isTRUE(autoLogin) && is.null(apiKey) && is.null(bearerToken)) {
-        self$login()
-      }
 
       self$sources <- Atlas3Sources$new(self)
       self$concepts <- Atlas3Concepts$new(self)
@@ -130,146 +120,40 @@ Atlas3 <- R6::R6Class(
       self$ddl <- Atlas3Ddl$new(self)
       self$evidence <- Atlas3Evidence$new(self)
       self$statistic <- Atlas3Statistic$new(self)
-
-      if (!is.null(username) || !is.null(password)) {
-        self$login(username, password)
-      }
       invisible(self)
     },
 
-    login = function(username = NULL,
-                     password = NULL,
-                     keyName = "atlas3-r",
-                     description = NULL,
-                     expiresInDays = NULL,
-                     store = TRUE,
-                     createApiKey = TRUE) {
-      username <- username %||% Sys.getenv("ATLAS3_USERNAME", unset = NA_character_)
-      password <- password %||% Sys.getenv("ATLAS3_PASSWORD", unset = NA_character_)
-      if (is.na(username) || !nzchar(username)) {
-        if (!interactive()) {
-          abort("No username supplied and ATLAS3_USERNAME is not set",
-            class = "atlas3_configuration_error"
-          )
-        }
-        username <- readline("ATLAS3 username: ")
-      }
-      if (is.na(password) || !nzchar(password)) {
-        if (!interactive()) {
-          abort("No password supplied and ATLAS3_PASSWORD is not set",
-            class = "atlas3_configuration_error"
-          )
-        }
-        password <- if (requireNamespace("askpass", quietly = TRUE)) {
-          askpass::askpass("ATLAS3 password: ")
-        } else {
-          readline("ATLAS3 password: ")
-        }
-      }
-
-      provider <- private$databaseProvider()
-      loginPath <- provider$url %||% "user/login/db"
-      loginPath <- sub("^/+", "", loginPath)
-      result <- private$rawRequest(
-        "POST", paste0("/", loginPath),
-        form = list(login = username, password = password)
-      )
-      jwt <- result$jwt
-      if (is.null(jwt) || !nzchar(jwt)) {
-        abort(
-          "WebAPI did not return a JWT. Check that database authentication is enabled and the credentials are correct.",
-          class = "atlas3_authentication_error"
-        )
-      }
-
-      if (isTRUE(createApiKey)) {
-        key <- private$rawRequest(
-          "POST", "/user/apikeys",
-          body = list(
-            name = keyName,
-            description = description,
-            expiresInDays = expiresInDays
-          ),
-          bearerToken = jwt
-        )
-        rawKey <- key$rawKey
-        if (is.null(rawKey) || !nzchar(rawKey)) {
-          abort("WebAPI created an API key but did not return it",
-            class = "atlas3_authentication_error"
-          )
-        }
-        self$apiKey <- rawKey
-        self$bearerToken <- NULL
-        private$credential <- list(
-          apiKey = rawKey,
-          apiUrl = self$apiUrl,
-          login = result$login %||% username,
-          keyIdentifier = key$keyIdentifier,
-          createdAt = atlas3NowIso()
-        )
-        if (isTRUE(store)) {
-          private$credentialStore$set(
-            self$apiUrl,
-            rawKey,
-            login = private$credential$login,
-            keyIdentifier = key$keyIdentifier
-          )
-        }
-      } else {
-        self$bearerToken <- jwt
-        self$apiKey <- NULL
-      }
+    login = function(apiKey, store = TRUE) {
+      checkmate::assertString(apiKey, min.chars = 1)
+      previous <- self$apiKey
+      self$apiKey <- apiKey
       private$currentUser <- NULL
-      self$whoami()
-      invisible(self)
-    },
-
-    loginWithJwt = function(jwt,
-                            createApiKey = FALSE,
-                            keyName = "atlas3-r",
-                            description = NULL,
-                            expiresInDays = NULL,
-                            store = TRUE) {
-      checkmate::assertString(jwt, min.chars = 1)
-      if (!isTRUE(createApiKey)) {
-        self$bearerToken <- jwt
-        self$apiKey <- NULL
-        private$currentUser <- NULL
-        self$whoami()
-        return(invisible(self))
-      }
-      key <- private$rawRequest(
-        "POST", "/user/apikeys",
-        body = list(
-          name = keyName,
-          description = description,
-          expiresInDays = expiresInDays
-        ),
-        bearerToken = jwt
+      tryCatch(
+        self$whoami(force = TRUE),
+        error = function(error) {
+          self$apiKey <- previous
+          private$currentUser <- NULL
+          stop(error)
+        }
       )
-      self$apiKey <- key$rawKey
-      self$bearerToken <- NULL
+      identifier <- atlas3KeyIdentifier(apiKey)
       private$credential <- list(
-        apiKey = self$apiKey,
+        apiKey = apiKey,
         apiUrl = self$apiUrl,
-        keyIdentifier = key$keyIdentifier,
+        keyIdentifier = identifier,
         createdAt = atlas3NowIso()
       )
       if (isTRUE(store)) {
-        private$credentialStore$set(
-          self$apiUrl, self$apiKey,
-          keyIdentifier = key$keyIdentifier
-        )
+        private$credentialStore$set(self$apiUrl, apiKey, keyIdentifier = identifier)
       }
-      private$currentUser <- NULL
-      self$whoami()
       invisible(self)
     },
 
     logout = function(revoke = TRUE) {
-      if (isTRUE(revoke) && !is.null(private$credential$keyIdentifier)) {
+      identifier <- private$credential$keyIdentifier %||% atlas3KeyIdentifier(self$apiKey)
+      if (isTRUE(revoke) && !is.null(identifier)) {
         tryCatch(
-          self$auth$revokeApiKey(private$credential$keyIdentifier, remove = TRUE),
+          self$auth$revokeApiKey(identifier, remove = TRUE),
           error = function(e) NULL
         )
       }
@@ -277,7 +161,6 @@ Atlas3 <- R6::R6Class(
       private$credential <- NULL
       private$currentUser <- NULL
       self$apiKey <- NULL
-      self$bearerToken <- NULL
       invisible(self)
     },
 
@@ -334,55 +217,7 @@ Atlas3 <- R6::R6Class(
   private = list(
     credentialStore = NULL,
     credential = NULL,
-    currentUser = NULL,
-    databaseProvider = function() {
-      providers <- self$discovery$authProviders
-      for (provider in providers) {
-        if (identical(tolower(provider$name), "db") ||
-          grepl("login/db", provider$url %||% "", fixed = TRUE)) {
-          return(provider)
-        }
-      }
-      abort(
-        "This WebAPI does not advertise database authentication. Supply a personal API key or JWT instead.",
-        class = "atlas3_authentication_error"
-      )
-    },
-    rawRequest = function(method, path, body = NULL, form = NULL, bearerToken = NULL) {
-      url <- atlas3HttpUrl(self, path)
-      request <- httr2::request(url)
-      request <- httr2::req_method(request, method)
-      headers <- list(Accept = "application/json")
-      if (!is.null(bearerToken)) {
-        headers[["Authorization"]] <- paste("Bearer", bearerToken)
-      }
-      request <- do.call(httr2::req_headers, c(list(request), headers))
-      request <- httr2::req_timeout(request, self$timeout)
-      request <- httr2::req_error(request, is_error = function(resp) FALSE)
-      if (!is.null(body)) {
-        request <- httr2::req_body_raw(
-          request,
-          jsonlite::toJSON(body, auto_unbox = TRUE, null = "null", na = "null", digits = NA),
-          type = "application/json"
-        )
-      }
-      if (!is.null(form)) {
-        request <- do.call(httr2::req_body_form, c(list(request), form))
-      }
-      response <- tryCatch(
-        httr2::req_perform(request),
-        error = function(error) {
-          abort(
-            paste0("Could not reach WebAPI: ", conditionMessage(error)),
-            class = "atlas3_connection_error"
-          )
-        }
-      )
-      if (httr2::resp_status(response) >= 400L) {
-        atlas3HttpError(response, method, url)
-      }
-      httr2::resp_body_json(response, simplifyVector = FALSE)
-    }
+    currentUser = NULL
   )
 )
 
@@ -390,51 +225,38 @@ Atlas3 <- R6::R6Class(
 #'
 #' Discovers the WebAPI root, checks that the server is ATLAS/WebAPI 3.0 or
 #' newer, and returns an [Atlas3] client. Supply an `apiKey` to skip credential
-#' lookup, or call `$login()` afterwards to create and store one.
+#' lookup, or call `$login(apiKey)` afterwards to validate and store one.
 #'
 #' @param url ATLAS UI URL, WebAPI URL, or bare host name.
-#' @param apiKey Optional personal API key (`wa_...`).
-#' @param bearerToken Optional JWT.
+#' @param apiKey Personal API key (`wa_...`). If omitted, `ATLAS3_API_KEY` or
+#'   a stored key is used.
 #' @param profile Credential-store profile name.
 #' @param timeout Request timeout in seconds.
 #' @param discovery Optional pre-built discovery result (used in tests).
-#' @param credentialStore Optional `Atlas3CredentialStore`.
+#' @param credentialStore Optional credential store.
 #' @param useKeyring Prefer the OS keyring when the `keyring` package is
 #'   installed.
-#' @param autoLogin Log in with `ATLAS3_USERNAME` / `ATLAS3_PASSWORD` when no
-#'   credential is available.
-#' @param username Optional login name; when supplied, the client logs in and
-#'   provisions an API key immediately.
-#' @param password Optional password used only for that login.
 #' @return An Atlas3 client object.
 #' @export
 #' @examples
 #' \dontrun{
-#' atlas <- connectAtlas("https://atlas.example.org")
+#' atlas <- connectAtlas("https://atlas.example.org", apiKey = "wa_...")
 #' atlas$sources$list()
 #' }
 connectAtlas <- function(url,
                          apiKey = NULL,
-                         bearerToken = NULL,
                          profile = "default",
                          timeout = 60,
                          discovery = NULL,
                          credentialStore = NULL,
-                         useKeyring = TRUE,
-                         autoLogin = FALSE,
-                         username = NULL,
-                         password = NULL) {
+                         useKeyring = TRUE) {
   Atlas3$new(
     url = url,
     apiKey = apiKey,
-    bearerToken = bearerToken,
     profile = profile,
     timeout = timeout,
     discovery = discovery,
     credentialStore = credentialStore,
-    useKeyring = useKeyring,
-    autoLogin = autoLogin,
-    username = username,
-    password = password
+    useKeyring = useKeyring
   )
 }

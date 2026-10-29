@@ -224,3 +224,15 @@ atlas3AssertSourceKey <- function(sourceKey) {
   checkmate::assertString(sourceKey, min.chars = 1)
   sourceKey
 }
+
+
+atlas3KeyIdentifier <- function(apiKey) {
+  if (is.null(apiKey) || !nzchar(apiKey)) {
+    return(NULL)
+  }
+  match <- regmatches(apiKey, regexec("^wa_([0-9a-fA-F]{16})_[A-Za-z0-9_-]+$", apiKey))[[1]]
+  if (length(match) < 2) {
+    return(NULL)
+  }
+  match[[2]]
+}

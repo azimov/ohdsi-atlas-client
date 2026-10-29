@@ -2,8 +2,7 @@
 
 Usage:
     export ATLAS3_URL=https://atlas.example.org
-    export ATLAS3_USERNAME=admin
-    export ATLAS3_PASSWORD=...
+    export ATLAS3_API_KEY=wa_...
     export ATLAS3_SOURCE=EUNOMIA
     python examples/python-quickstart.py
 """
@@ -21,12 +20,9 @@ def main() -> None:
         raise SystemExit("Set ATLAS3_URL")
     source = os.environ.get("ATLAS3_SOURCE", "EUNOMIA")
 
-    atlas = Atlas(url)
+    atlas = Atlas(url, api_key=os.environ.get("ATLAS3_API_KEY"))
     if not atlas.is_authenticated:
-        atlas.login(
-            os.environ.get("ATLAS3_USERNAME"),
-            os.environ.get("ATLAS3_PASSWORD"),
-        )
+        raise SystemExit("Set ATLAS3_API_KEY")
 
     print(f"Connected to {atlas.api_url} (WebAPI {atlas.version}) as {atlas.user.login}")
     print(f"Permissions: {len(atlas.permissions)}")

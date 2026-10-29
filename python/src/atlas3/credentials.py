@@ -12,7 +12,7 @@ from typing import Any
 
 from platformdirs import user_config_dir
 
-from .utils import utc_now_iso
+from .utils import api_key_identifier, utc_now_iso
 
 logger = logging.getLogger("atlas3.credentials")
 
@@ -25,7 +25,6 @@ class Credential:
 
     api_key: str
     api_url: str
-    login: str | None = None
     key_identifier: str | None = None
     created_at: str | None = None
 
@@ -34,7 +33,6 @@ class Credential:
         return {
             "apiKey": payload["api_key"],
             "apiUrl": payload["api_url"],
-            "login": payload["login"],
             "keyIdentifier": payload["key_identifier"],
             "createdAt": payload["created_at"],
         }
@@ -47,7 +45,6 @@ class Credential:
         return cls(
             api_key=str(api_key),
             api_url=str(payload.get("apiUrl", payload.get("api_url", ""))),
-            login=payload.get("login"),
             key_identifier=payload.get("keyIdentifier", payload.get("key_identifier")),
             created_at=payload.get("createdAt", payload.get("created_at")),
         )
@@ -177,18 +174,11 @@ class CredentialStore:
             pass
 
 
-def credential_from_key(
-    api_key: str,
-    api_url: str,
-    *,
-    login: str | None = None,
-    key_identifier: str | None = None,
-) -> Credential:
+def credential_from_key(api_key: str, api_url: str) -> Credential:
     """Build a :class:`Credential` with a creation timestamp."""
     return Credential(
         api_key=api_key,
         api_url=api_url,
-        login=login,
-        key_identifier=key_identifier,
+        key_identifier=api_key_identifier(api_key),
         created_at=utc_now_iso(),
     )

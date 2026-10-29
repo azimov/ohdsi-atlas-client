@@ -6,17 +6,19 @@ deployment before writing code.
 
 Examples::
 
+    atlas3 login --url https://atlas.example.org
     atlas3 info --url https://atlas.example.org
     atlas3 sources --url https://atlas.example.org
-    atlas3 concepts search --url ... --source EUNOMIA --query diclofenac
+    atlas3 concepts --url ... --source EUNOMIA --query diclofenac
     atlas3 concept-counts --url ... --source EUNOMIA --concept 1124300
-    atlas3 cohort-set export --url ... --output cohorts.zip
-    atlas3 cohort-set import --url ... cohorts.zip --on-conflict rename
+    atlas3 cohort-set --url ... --export cohorts.zip
+    atlas3 cohort-set --url ... --import cohorts.zip --on-conflict rename
 """
 
 from __future__ import annotations
 
 import argparse
+import getpass
 import json
 import os
 import sys
@@ -33,10 +35,12 @@ def _client(args: argparse.Namespace) -> AtlasClient:
     url = args.url or os.environ.get("ATLAS3_URL")
     if not url:
         raise SystemExit("Pass --url or set ATLAS3_URL")
-    client = AtlasClient(url, timeout=args.timeout, verify=not args.insecure)
-    if getattr(args, "login", False):
-        client.login()
-    return client
+    return AtlasClient(
+        url,
+        api_key=args.api_key,
+        timeout=args.timeout,
+        verify=not args.insecure,
+    )
 
 
 def _print(value: Any) -> None:
@@ -58,25 +62,20 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--version", action="version", version=f"atlas3 {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    def common(p: argparse.ArgumentParser, *, login: bool = False) -> None:
+    def common(p: argparse.ArgumentParser) -> None:
         p.add_argument("--url", help="ATLAS or WebAPI URL (or ATLAS3_URL)")
+        p.add_argument("--api-key", help="API key (or ATLAS3_API_KEY)")
         p.add_argument("--timeout", type=float, default=60.0)
         p.add_argument("--insecure", action="store_true", help="Disable TLS verification")
-        if login:
-            p.add_argument(
-                "--login", action="store_true", help="Log in with ATLAS3_USERNAME/PASSWORD"
-            )
 
     p_info = sub.add_parser("info", help="Server version and build information")
     common(p_info)
 
-    p_login = sub.add_parser("login", help="Log in and provision an API key")
+    p_login = sub.add_parser("login", help="Validate and store an API key")
     common(p_login)
-    p_login.add_argument("--username", help="Defaults to ATLAS3_USERNAME")
-    p_login.add_argument("--key-name", default="atlas3-cli")
 
     p_sources = sub.add_parser("sources", help="List CDM sources")
-    common(p_sources, login=True)
+    common(p_sources)
 
     p_endpoints = sub.add_parser("endpoints", help="List the WebAPI endpoint catalog")
     common(p_endpoints)
@@ -84,7 +83,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_endpoints.add_argument("--method")
 
     p_concepts = sub.add_parser("concepts", help="Search concepts")
-    common(p_concepts, login=True)
+    common(p_concepts)
     p_concepts.add_argument("--source", required=True)
     p_concepts.add_argument("--query", required=True)
     p_concepts.add_argument("--rows", type=int, default=25)
@@ -92,20 +91,20 @@ def build_parser() -> argparse.ArgumentParser:
     p_concepts.add_argument("--vocabulary")
 
     p_counts = sub.add_parser("concept-counts", help="Record/person counts for concepts")
-    common(p_counts, login=True)
+    common(p_counts)
     p_counts.add_argument("--source", required=True)
     p_counts.add_argument("--concept", action="append", type=int, required=True)
 
     p_cs = sub.add_parser("concept-sets", help="List concept sets")
-    common(p_cs, login=True)
+    common(p_cs)
     p_cs.add_argument("--id", type=int, help="Show one concept-set expression")
 
     p_cohorts = sub.add_parser("cohorts", help="List cohort definitions")
-    common(p_cohorts, login=True)
+    common(p_cohorts)
     p_cohorts.add_argument("--id", type=int, help="Show one cohort definition")
 
     p_cs_export = sub.add_parser("cohort-set", help="Export or import a cohort set")
-    common(p_cs_export, login=True)
+    common(p_cs_export)
     action = p_cs_export.add_mutually_exclusive_group(required=True)
     action.add_argument("--export", metavar="PATH", help="Export path (.json, .zip, dir)")
     action.add_argument("--import", dest="import_path", metavar="PATH")
@@ -116,12 +115,11 @@ def build_parser() -> argparse.ArgumentParser:
     p_cs_export.add_argument("--dry-run", action="store_true")
 
     p_call = sub.add_parser("call", help="Invoke a catalog endpoint")
-    common(p_call, login=True)
+    common(p_call)
     p_call.add_argument("operation")
     p_call.add_argument("--param", action="append", default=[], metavar="KEY=VALUE")
     p_call.add_argument("--body", help="JSON request body")
 
-    p_login.add_argument("--password-stdin", action="store_true", help=argparse.SUPPRESS)
     return parser
 
 
@@ -134,7 +132,8 @@ def main(argv: list[str] | None = None) -> int:
             if args.command == "info":
                 _print(client.info())
             elif args.command == "login":
-                client.login(args.username, key_name=args.key_name)
+                api_key = args.api_key or getpass.getpass("ATLAS3 API key: ")
+                client.login(api_key)
                 _print(
                     {
                         "url": client.api_url,

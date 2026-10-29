@@ -3,16 +3,14 @@ test_that("live ATLAS 3.0 workflows", {
   skip_if(!nzchar(url), "ATLAS3_TEST_URL is not set")
   skip_on_cran()
 
-  username <- Sys.getenv("ATLAS3_TEST_USERNAME", unset = "")
-  password <- Sys.getenv("ATLAS3_TEST_PASSWORD", unset = "")
+  apiKey <- Sys.getenv("ATLAS3_TEST_API_KEY", unset = "")
+  skip_if(!nzchar(apiKey), "ATLAS3_TEST_API_KEY is not set")
   sourceKey <- Sys.getenv("ATLAS3_TEST_SOURCE", unset = "EUNOMIA")
   store <- Atlas3CredentialStore$new(
     configDir = tempfile("atlas3-live-"), useKeyring = FALSE
   )
-  atlas <- connectAtlas(url, credentialStore = store, useKeyring = FALSE)
-  if (nzchar(username) && nzchar(password)) {
-    atlas$login(username, password, keyName = paste0("atlas3-r-test-", sample.int(1e8, 1)))
-  }
+  atlas <- connectAtlas(url, apiKey = apiKey, credentialStore = store, useKeyring = FALSE)
+  atlas$login(apiKey, store = FALSE)
   expect_true(atlas3VersionAtLeast(atlas$version))
   sources <- atlas$sources$list()
   expect_true(length(sources) >= 1)
@@ -40,8 +38,4 @@ test_that("live ATLAS 3.0 workflows", {
   expect_true(length(bundle$cohorts) >= 1)
   plan <- atlas$cohortSets$import(bundle, onConflict = "rename", dryRun = TRUE)
   expect_true(length(plan$createdCohorts) >= 1)
-
-  if (nzchar(username) && nzchar(password)) {
-    on.exit(atlas$logout(revoke = TRUE), add = TRUE)
-  }
 })

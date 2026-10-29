@@ -64,13 +64,6 @@ class CurrentUser(APIModel):
     authz: Authorization = Field(default_factory=Authorization)
 
 
-class AuthProvider(APIModel):
-    name: str
-    url: str | None = None
-    ajax: bool = False
-    use_credentials_form: bool = Field(default=False, alias="useCredentialsForm")
-
-
 class Info(APIModel):
     version: str
     build_info: dict[str, Any] = Field(default_factory=dict, alias="buildInfo")

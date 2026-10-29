@@ -1,8 +1,7 @@
 # End-to-end R example against a live ATLAS 3.0 deployment.
 #
 #   export ATLAS3_URL=https://atlas.example.org
-#   export ATLAS3_USERNAME=admin
-#   export ATLAS3_PASSWORD=...
+#   export ATLAS3_API_KEY=wa_...
 #   export ATLAS3_SOURCE=EUNOMIA
 #   Rscript examples/r-quickstart.R
 
@@ -14,13 +13,7 @@ if (!nzchar(url)) {
 }
 sourceKey <- Sys.getenv("ATLAS3_SOURCE", unset = "EUNOMIA")
 
-atlas <- connectAtlas(url)
-if (is.null(atlas$apiKey) && is.null(atlas$bearerToken)) {
-  atlas$login(
-    Sys.getenv("ATLAS3_USERNAME", unset = ""),
-    Sys.getenv("ATLAS3_PASSWORD", unset = "")
-  )
-}
+atlas <- connectAtlas(url, apiKey = Sys.getenv("ATLAS3_API_KEY"))
 
 cat("Connected to", atlas$apiUrl, "(WebAPI", atlas$version, ")\n")
 print(atlas$whoami()$user)

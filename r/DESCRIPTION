@@ -7,8 +7,7 @@ Authors@R:
            role = c("aut", "cre"))
 Description: A modern client for the OHDSI ATLAS 3.0 and WebAPI 3.0 REST
     interface. Discovers a deployment from its URL, negotiates the WebAPI
-    version, authenticates with personal API keys or database login, and
-    provides typed access to sources, vocabularies, concept sets, cohort
+    version, authenticates with personal API keys, and provides typed access to sources, vocabularies, concept sets, cohort
     definitions, cohort definition sets, CDM results, jobs, and analysis
     resources. Cohort definition sets are portable JSON or ZIP bundles
     containing cohort expressions and their embedded concept sets. The

@@ -7,7 +7,7 @@
 \title{Atlas3: a client for OHDSI ATLAS 3.0 and WebAPI 3.0}
 \description{
 \code{Atlas3} connects to an ATLAS 3.0 deployment from its URL, discovers the
-WebAPI root and authentication providers, and provides typed access to
+WebAPI root and version, and provides typed access to
 sources, vocabularies, concept sets, cohort definitions, cohort definition
 sets, CDM results, jobs, and analysis resources.
 }
@@ -15,8 +15,7 @@ sets, CDM results, jobs, and analysis resources.
 
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{library(Atlas3)
-atlas <- connectAtlas("https://atlas.example.org")
-atlas$login("user", "password")
+atlas <- connectAtlas("https://atlas.example.org", apiKey = "wa_...")
 atlas$sources$list()
 atlas$concepts$search("EUNOMIA", "diclofenac")
 }\if{html}{\out{</div>}}

@@ -13,12 +13,11 @@ discoverAtlas(url, timeout = 10)
 }
 \value{
 An object of class \code{atlas3_discovery} with \code{inputUrl}, \code{apiUrl},
-\code{atlasUrl}, \code{version}, \code{buildInfo}, \code{configuration}, and \code{authProviders}.
+\code{atlasUrl}, \code{version}, \code{buildInfo}, and \code{configuration}.
 }
 \description{
-Probes the common ATLAS/WebAPI URL layouts, checks the server version, and
-reads the enabled authentication providers. Most users should call
-\code{\link[=connectAtlas]{connectAtlas()}} instead.
+Probes the common ATLAS/WebAPI URL layouts and checks the server version.
+Most users should call \code{\link[=connectAtlas]{connectAtlas()}} instead.
 }
 \examples{
 \dontrun{

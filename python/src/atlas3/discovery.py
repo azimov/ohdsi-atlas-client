@@ -18,35 +18,6 @@ from .utils import candidate_api_bases, is_at_least, normalize_url
 
 
 @dataclass(frozen=True, slots=True)
-class AuthProvider:
-    """An authentication provider advertised by WebAPI."""
-
-    name: str
-    url: str | None = None
-    ajax: bool = False
-    use_credentials_form: bool = False
-
-    @property
-    def key(self) -> str:
-        return self.name.strip().lower()
-
-    @property
-    def is_database(self) -> bool:
-        return self.key == "db" or "login/db" in (self.url or "").lower()
-
-    @classmethod
-    def from_api(cls, payload: dict[str, Any]) -> AuthProvider:
-        return cls(
-            name=str(payload.get("name") or ""),
-            url=payload.get("url"),
-            ajax=bool(payload.get("ajax", False)),
-            use_credentials_form=bool(
-                payload.get("useCredentialsForm", payload.get("use_credentials_form", False))
-            ),
-        )
-
-
-@dataclass(frozen=True, slots=True)
 class Discovery:
     """The result of probing an ATLAS URL."""
 
@@ -56,15 +27,6 @@ class Discovery:
     version: str
     build: dict[str, Any] = field(default_factory=dict)
     configuration: dict[str, Any] = field(default_factory=dict)
-    auth_providers: tuple[AuthProvider, ...] = ()
-
-    @property
-    def supports_database_login(self) -> bool:
-        return any(provider.is_database for provider in self.auth_providers)
-
-    @property
-    def provider_names(self) -> tuple[str, ...]:
-        return tuple(provider.name for provider in self.auth_providers)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -74,15 +36,6 @@ class Discovery:
             "version": self.version,
             "build": self.build,
             "configuration": self.configuration,
-            "authProviders": [
-                {
-                    "name": provider.name,
-                    "url": provider.url,
-                    "ajax": provider.ajax,
-                    "useCredentialsForm": provider.use_credentials_form,
-                }
-                for provider in self.auth_providers
-            ],
         }
 
 
@@ -105,7 +58,7 @@ def discover(
     verify: bool = True,
     client: httpx.Client | None = None,
 ) -> Discovery:
-    """Discover the WebAPI root, version, and auth providers for ``url``.
+    """Discover the WebAPI root and version for ``url``.
 
     Args:
         url: ATLAS UI URL, WebAPI URL, or bare host name.
@@ -129,7 +82,6 @@ def discover(
 
     info: dict[str, Any] | None = None
     api_url: str | None = None
-    providers: tuple[AuthProvider, ...] = ()
     try:
         for candidate in candidates:
             try:
@@ -158,20 +110,6 @@ def discover(
             info = payload
             api_url = candidate
             break
-
-        if api_url is not None:
-            try:
-                auth_response = http.get(f"{api_url}/auth/providers", timeout=timeout)
-                if auth_response.status_code == 200 and "json" in auth_response.headers.get(
-                    "content-type", ""
-                ):
-                    raw = auth_response.json()
-                    if isinstance(raw, list):
-                        providers = tuple(
-                            AuthProvider.from_api(item) for item in raw if isinstance(item, dict)
-                        )
-            except (httpx.HTTPError, ValueError):
-                providers = ()
     finally:
         if owned_client:
             http.close()
@@ -195,5 +133,4 @@ def discover(
         version=version,
         build=dict(info.get("buildInfo") or {}),
         configuration=dict(info.get("configuration") or {}),
-        auth_providers=providers,
     )

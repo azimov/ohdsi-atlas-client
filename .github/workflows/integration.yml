@@ -26,16 +26,14 @@ jobs:
       - run: pytest -q -m integration
         env:
           ATLAS3_TEST_URL: ${{ secrets.ATLAS3_TEST_URL }}
-          ATLAS3_TEST_USERNAME: ${{ secrets.ATLAS3_TEST_USERNAME }}
-          ATLAS3_TEST_PASSWORD: ${{ secrets.ATLAS3_TEST_PASSWORD }}
+          ATLAS3_TEST_API_KEY: ${{ secrets.ATLAS3_TEST_API_KEY }}
           ATLAS3_TEST_SOURCE: ${{ inputs.source }}
 
   r:
     runs-on: ubuntu-latest
     env:
       ATLAS3_TEST_URL: ${{ secrets.ATLAS3_TEST_URL }}
-      ATLAS3_TEST_USERNAME: ${{ secrets.ATLAS3_TEST_USERNAME }}
-      ATLAS3_TEST_PASSWORD: ${{ secrets.ATLAS3_TEST_PASSWORD }}
+      ATLAS3_TEST_API_KEY: ${{ secrets.ATLAS3_TEST_API_KEY }}
       ATLAS3_TEST_SOURCE: ${{ inputs.source }}
     steps:
       - uses: actions/checkout@v4

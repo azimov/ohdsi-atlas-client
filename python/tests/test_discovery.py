@@ -18,18 +18,6 @@ def _handler(request: httpx.Request) -> httpx.Response:
                 "configuration": {},
             },
         )
-    if path == "/WebAPI/auth/providers":
-        return httpx.Response(
-            200,
-            json=[
-                {
-                    "name": "DB",
-                    "url": "user/login/db",
-                    "ajax": True,
-                    "useCredentialsForm": True,
-                }
-            ],
-        )
     return httpx.Response(404, json={"message": "Resource not found"})
 
 
@@ -40,8 +28,7 @@ def test_discover_from_atlas_ui_url() -> None:
     assert result.api_url == "https://atlas.example.org/WebAPI"
     assert result.atlas_url == "https://atlas.example.org/atlas"
     assert result.version == "3.0.0"
-    assert result.supports_database_login
-    assert result.provider_names == ("DB",)
+    assert result.to_dict()["apiUrl"] == "https://atlas.example.org/WebAPI"
 
 
 def test_discover_rejects_old_version() -> None:
