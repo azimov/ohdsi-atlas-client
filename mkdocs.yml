@@ -1,18 +1,40 @@
-site_name: Atlas3 clients
+site_name: OhdsiAtlasClient
 site_description: Python and R clients for OHDSI ATLAS 3.0 and WebAPI 3.0
-repo_url: https://github.com/OHDSI/Atlas3Clients
+repo_url: https://github.com/OHDSI/OhdsiAtlasClient
 theme:
   name: material
   features:
     - navigation.sections
+    - navigation.top
     - content.code.copy
-nav:
-  - Home: index.md
-  - Authentication: authentication.md
-  - Cohort definition sets: cohort-sets.md
-  - Endpoint coverage: endpoints.md
-  - Python / R parity: parity.md
-  - Architecture: architecture.md
+    - search.suggest
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 markdown_extensions:
   - admonition
+  - toc:
+      permalink: true
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+nav:
+  - Home: index.md
+  - Recipes: recipes.md
+  - Guides:
+      - Authentication: authentication.md
+      - Database and CDM configuration: configuration.md
+      - Cohort definition sets: cohort-sets.md
+      - "R: migrating from ROhdsiWebApi": migrating-from-rohdsiwebapi.md
+  - Reference:
+      - API reference (generated): reference.md
+      - Python / R parity: parity.md
+      - Endpoint coverage: endpoints.md
+  - Troubleshooting: troubleshooting.md
+  - Architecture: architecture.md

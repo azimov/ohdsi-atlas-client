@@ -1,0 +1,132 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ohdsi-atlas-client"
+version = "0.1.0"
+description = "Modern Python client for OHDSI ATLAS 3.0 and WebAPI 3.0"
+readme = { file = "README.md", content-type = "text/markdown" }
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [
+  { name = "Jamie Gilbert", email = "gilbert@ohdsi.org" },
+]
+maintainers = [
+  { name = "Jamie Gilbert", email = "gilbert@ohdsi.org" },
+]
+keywords = [
+  "ohdsi",
+  "atlas",
+  "webapi",
+  "omop",
+  "cdm",
+  "cohort",
+  "concept-set",
+  "observational-health",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Healthcare Industry",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Medical Science Apps.",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Typing :: Typed",
+]
+requires-python = ">=3.10"
+dependencies = [
+  "httpx>=0.27,<1",
+  "pydantic>=2.5,<3",
+  "platformdirs>=4,<5",
+  "pyyaml>=6,<7",
+  "typing-extensions>=4.8; python_version < '3.12'",
+]
+
+[project.optional-dependencies]
+circe = ["ohdsi-circepy>=0.3.0"]
+keyring = ["keyring>=24"]
+dev = [
+  "pytest>=8",
+  "pytest-cov>=5",
+  "ruff>=0.6",
+  "mypy>=1.10",
+  "build>=1.2",
+  "twine>=5",
+]
+docs = ["mkdocs-material>=9.5", "mkdocstrings[python]>=0.25"]
+
+[project.urls]
+Homepage = "https://github.com/OHDSI/OhdsiAtlasClient"
+Documentation = "https://ohdsi.github.io/OhdsiAtlasClient/"
+Repository = "https://github.com/OHDSI/OhdsiAtlasClient"
+Issues = "https://github.com/OHDSI/OhdsiAtlasClient/issues"
+Changelog = "https://github.com/OHDSI/OhdsiAtlasClient/blob/main/python/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/OHDSI/OhdsiAtlasClient/issues"
+
+[project.scripts]
+ohdsi-atlas-client = "ohdsi_atlas_client.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["ohdsi_atlas_client*"]
+
+[tool.setuptools.package-data]
+ohdsi_atlas_client = ["py.typed", "data/*.json"]
+
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+  "integration: requires a live ATLAS 3.0 WebAPI (set OHDSI_ATLAS_CLIENT_TEST_URL)",
+]
+filterwarnings = [
+  "error::DeprecationWarning:ohdsi_atlas_client.*",
+]
+
+[tool.coverage.run]
+source = ["ohdsi_atlas_client"]
+branch = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "PT", "RET", "SIM", "TID", "RUF"]
+ignore = [
+  "E501",   # handled by the formatter
+  "A003",   # "id" / "type" intentionally mirror the WebAPI
+  "N818",   # exception names follow HTTP semantics
+  "RUF001", # en-dashes appear in doc prose
+  "TID252", # relative imports within a package are intentional
+  "SIM105", # contextlib.suppress is not always clearer for permissions
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "PT011", "PT018", "SIM117"]
+"src/ohdsi_atlas_client/resources/*" = ["UP006", "UP035"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+no_implicit_optional = true
+check_untyped_defs = true
+disallow_any_generics = false
+disallow_subclassing_any = false
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = ["keyring", "circe", "circe.*", "yaml"]
+ignore_missing_imports = true

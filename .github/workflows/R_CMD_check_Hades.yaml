@@ -1,0 +1,80 @@
+name: R-CMD-check
+
+# HADES release process: every push is checked on Windows, macOS, and Linux,
+# and released packages must pass R CMD check without warnings on all three.
+# https://ohdsi.github.io/Hades/releaseProcess.html
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "OhdsiAtlasClient/**"
+      - ".github/workflows/R_CMD_check_Hades.yaml"
+  pull_request:
+    paths:
+      - "OhdsiAtlasClient/**"
+      - ".github/workflows/R_CMD_check_Hades.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  R-CMD-check:
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { os: windows-latest, r: "release" }
+          - { os: macos-latest, r: "release" }
+          - { os: ubuntu-latest, r: "release" }
+          - { os: ubuntu-latest, r: "devel" }
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+      _R_CHECK_CRAN_INCOMING_REMOTE_: false
+      _R_CHECK_FORCE_SUGGESTS_: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          working-directory: OhdsiAtlasClient
+          extra-packages: |
+            any::rcmdcheck
+            any::covr
+            any::keyring
+          needs: check
+
+      - name: Test coverage
+        shell: Rscript {0}
+        working-directory: OhdsiAtlasClient
+        run: |
+          if (!requireNamespace("covr", quietly = TRUE)) {
+            message("covr not available; skipping coverage")
+            quit(status = 0)
+          }
+          coverage <- covr::package_coverage(type = "tests", quiet = TRUE)
+          percent <- covr::percent_coverage(coverage)
+          cat("Test coverage:", round(percent, 1), "%\n")
+          # HADES guideline is approximately 80%.
+          if (percent < 80) {
+            stop(sprintf("Coverage %.1f%% is below the HADES guideline of 80%%", percent))
+          }
+
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          working-directory: OhdsiAtlasClient
+          error-on: '"warning"'
+          args: 'c("--no-manual", "--as-cran")'
+          upload-snapshots: true

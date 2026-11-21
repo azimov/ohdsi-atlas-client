@@ -8,27 +8,27 @@ database passwords, OAuth browser sessions, or JWTs.
 ```python
 import os
 
-from atlas3 import Atlas
+from ohdsi_atlas_client import Atlas
 
 atlas = Atlas(
     "https://atlas.example.org",
-    api_key=os.environ["ATLAS3_API_KEY"],
+    api_key=os.environ["OHDSI_ATLAS_CLIENT_API_KEY"],
 )
 # or store a key for later:
 atlas = Atlas("https://atlas.example.org")
-atlas.login(os.environ["ATLAS3_API_KEY"])
+atlas.login(os.environ["OHDSI_ATLAS_CLIENT_API_KEY"])
 ```
 
 ```r
-library(Atlas3)
+library(OhdsiAtlasClient)
 
 atlas <- connectAtlas(
   "https://atlas.example.org",
-  apiKey = Sys.getenv("ATLAS3_API_KEY")
+  apiKey = Sys.getenv("OHDSI_ATLAS_CLIENT_API_KEY")
 )
 # or store a key for later:
 atlas <- connectAtlas("https://atlas.example.org")
-atlas$login(Sys.getenv("ATLAS3_API_KEY"))
+atlas$login(Sys.getenv("OHDSI_ATLAS_CLIENT_API_KEY"))
 ```
 
 Every request sends:
@@ -69,7 +69,7 @@ https://host/WebAPI/...  -> WebAPI 3 (JSON)
 
 The discovered version must be `>= 3.0.0`. The parsers accept
 `3.0.0-SNAPSHOT`, `v3.1`, and similar suffixes. A WebAPI 2.x deployment raises
-`UnsupportedVersionError` (Python) / `atlas3_unsupported_version_error` (R)
+`UnsupportedVersionError` (Python) / `ohdsi_atlas_client_unsupported_version_error` (R)
 with the detected version and URL.
 
 ## 3. Supplying a key
@@ -77,7 +77,7 @@ with the detected version and URL.
 In priority order:
 
 1. The `api_key` argument (Python) / `apiKey` argument (R).
-2. The `ATLAS3_API_KEY` environment variable.
+2. The `OHDSI_ATLAS_CLIENT_API_KEY` environment variable.
 3. A key stored by `login()` in the OS keyring or credentials file.
 4. No key: the client is anonymous. WebAPI may still answer `200` with empty
    data; that is not authorization.
@@ -86,12 +86,12 @@ One-call use:
 
 ```python
 import os
-atlas = Atlas("https://atlas.example.org", api_key=os.environ["ATLAS3_API_KEY"])
+atlas = Atlas("https://atlas.example.org", api_key=os.environ["OHDSI_ATLAS_CLIENT_API_KEY"])
 ```
 
 ```r
 atlas <- connectAtlas("https://atlas.example.org",
-                      apiKey = Sys.getenv("ATLAS3_API_KEY"))
+                      apiKey = Sys.getenv("OHDSI_ATLAS_CLIENT_API_KEY"))
 ```
 
 ### `login(api_key)`
@@ -104,21 +104,21 @@ key unchanged.
 import os
 
 atlas = Atlas("https://atlas.example.org")
-atlas.login(os.environ["ATLAS3_API_KEY"], store=True)
+atlas.login(os.environ["OHDSI_ATLAS_CLIENT_API_KEY"], store=True)
 ```
 
 ```r
 atlas <- connectAtlas("https://atlas.example.org")
-atlas$login(Sys.getenv("ATLAS3_API_KEY"), store = TRUE)
+atlas$login(Sys.getenv("OHDSI_ATLAS_CLIENT_API_KEY"), store = TRUE)
 ```
 
 ### Stored credentials
 
 **Python**
 
-1. `ATLAS3_API_KEY` (never written).
-2. OS keyring via the optional `keyring` package (`atlas3` service).
-3. The platform config directory (`platformdirs.user_config_dir("atlas3")`)
+1. `OHDSI_ATLAS_CLIENT_API_KEY` (never written).
+2. OS keyring via the optional `keyring` package (`ohdsi_atlas_client` service).
+3. The platform config directory (`platformdirs.user_config_dir("ohdsi_atlas_client")`)
    with mode `0600`.
 
 Pass `Atlas(..., use_keyring=False)` to force the file backend, which is useful
@@ -126,9 +126,9 @@ in containers without a D-Bus/Keychain service.
 
 **R**
 
-1. `ATLAS3_API_KEY`.
-2. OS keyring via the optional `keyring` package (`atlas3` service).
-3. `tools::R_user_dir("Atlas3", "config")/credentials.json` with mode `0600`.
+1. `OHDSI_ATLAS_CLIENT_API_KEY`.
+2. OS keyring via the optional `keyring` package (`ohdsi_atlas_client` service).
+3. `tools::R_user_dir("OhdsiAtlasClient", "config")/credentials.json` with mode `0600`.
 
 `keyring` is in `Suggests`; if it is not installed the file backend is used.
 `connectAtlas(..., useKeyring = FALSE)` forces the file backend.
@@ -141,12 +141,12 @@ Only the key and its public identifier are stored. There is no password field.
 import os
 
 atlas.logout(revoke=True)     # DELETE /user/apikeys/{id}?remove=true, then clear store
-atlas.set_api_key(os.environ["ATLAS3_NEW_API_KEY"])
+atlas.set_api_key(os.environ["OHDSI_ATLAS_CLIENT_NEW_API_KEY"])
 ```
 
 ```r
 atlas$logout(revoke = TRUE)
-atlas$login(Sys.getenv("ATLAS3_NEW_API_KEY"))
+atlas$login(Sys.getenv("OHDSI_ATLAS_CLIENT_NEW_API_KEY"))
 ```
 
 The identifier is the 16-hex-character segment after the key prefix.

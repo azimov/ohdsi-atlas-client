@@ -1,9 +1,9 @@
 """End-to-end Python example against a live ATLAS 3.0 deployment.
 
 Usage:
-    # ATLAS3_API_KEY must be set in the environment (or a secret manager).
-    export ATLAS3_URL=https://atlas.example.org
-    export ATLAS3_SOURCE=EUNOMIA
+    # OHDSI_ATLAS_CLIENT_API_KEY must be set in the environment (or a secret manager).
+    export OHDSI_ATLAS_CLIENT_URL=https://atlas.example.org
+    export OHDSI_ATLAS_CLIENT_SOURCE=EUNOMIA
     python examples/python-quickstart.py
 """
 
@@ -11,18 +11,18 @@ from __future__ import annotations
 
 import os
 
-from atlas3 import Atlas
+from ohdsi_atlas_client import Atlas
 
 
 def main() -> None:
-    url = os.environ.get("ATLAS3_URL")
+    url = os.environ.get("OHDSI_ATLAS_CLIENT_URL")
     if not url:
-        raise SystemExit("Set ATLAS3_URL")
-    source = os.environ.get("ATLAS3_SOURCE", "EUNOMIA")
+        raise SystemExit("Set OHDSI_ATLAS_CLIENT_URL")
+    source = os.environ.get("OHDSI_ATLAS_CLIENT_SOURCE", "EUNOMIA")
 
-    atlas = Atlas(url, api_key=os.environ.get("ATLAS3_API_KEY"))
+    atlas = Atlas(url, api_key=os.environ.get("OHDSI_ATLAS_CLIENT_API_KEY"))
     if not atlas.is_authenticated:
-        raise SystemExit("Set ATLAS3_API_KEY")
+        raise SystemExit("Set OHDSI_ATLAS_CLIENT_API_KEY")
 
     print(f"Connected to {atlas.api_url} (WebAPI {atlas.version}) as {atlas.user.login}")
     print(f"Permissions: {len(atlas.permissions)}")
@@ -40,7 +40,7 @@ def main() -> None:
     print("Demo cohort:", demo.name, "concept sets:", len(demo.expression.get("ConceptSets", [])))
 
     plan = atlas.cohort_sets.import_(
-        atlas.cohort_sets.export([1], path="/tmp/atlas3-demo-set.zip"),
+        atlas.cohort_sets.export([1], path="/tmp/ohdsi-atlas-client-demo-set.zip"),
         on_conflict="rename",
         dry_run=True,
     )

@@ -1,0 +1,50 @@
+name: Docs
+
+on:
+  push:
+    paths:
+      - "docs/**"
+      - "scripts/generate_reference.py"
+      - "scripts/sync_vignettes.py"
+      - "ohdsi-atlas-client/src/ohdsi_atlas_client/resources/**"
+      - "OhdsiAtlasClient/R/**"
+      - "OhdsiAtlasClient/vignettes/**"
+      - "mkdocs.yml"
+      - ".github/workflows/docs.yml"
+  pull_request:
+    paths:
+      - "docs/**"
+      - "scripts/generate_reference.py"
+      - "scripts/sync_vignettes.py"
+      - "ohdsi-atlas-client/src/ohdsi_atlas_client/resources/**"
+      - "OhdsiAtlasClient/R/**"
+      - "OhdsiAtlasClient/vignettes/**"
+      - "mkdocs.yml"
+      - ".github/workflows/docs.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Generated docs are current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # The reference generator parses source with ast; it does not need the
+      # package installed. sync_vignettes.py only rewrites Markdown.
+      - name: API reference matches source
+        run: python scripts/generate_reference.py --check
+
+      - name: R vignette pages match vignettes
+        run: python scripts/sync_vignettes.py --check
+
+      - name: Build the site
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install mkdocs-material
+          mkdocs build --strict --site-dir "${RUNNER_TEMP}/site"

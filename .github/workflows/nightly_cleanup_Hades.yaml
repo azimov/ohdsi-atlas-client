@@ -1,0 +1,54 @@
+name: nightly_cleanup
+
+# HADES release process support: removes old GitHub Actions caches and
+# workflow artefacts so the repository does not accumulate stale data.
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  delete-caches:
+    name: Delete stale caches
+    runs-on: ubuntu-latest
+    steps:
+      - name: Purge caches older than 7 days
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          cutoff=$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null \
+            || date -u -v-7d +%Y-%m-%dT%H:%M:%SZ)
+          gh api -X GET "repos/${REPO}/actions/caches" --paginate \
+            --jq ".actions_caches[] | select(.last_accessed_at < \"${cutoff}\") | .id" |
+            while read -r id; do
+              [ -n "$id" ] || continue
+              echo "Deleting cache $id"
+              gh api -X DELETE "repos/${REPO}/actions/caches/${id}" || true
+            done
+
+  delete-artifacts:
+    name: Delete old artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Purge artifacts older than 30 days
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          cutoff=$(date -u -d '30 days ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null \
+            || date -u -v-30d +%Y-%m-%dT%H:%M:%SZ)
+          gh api -X GET "repos/${REPO}/actions/artifacts" --paginate \
+            --jq ".artifacts[] | select(.created_at < \"${cutoff}\") | .id" |
+            while read -r id; do
+              [ -n "$id" ] || continue
+              echo "Deleting artifact $id"
+              gh api -X DELETE "repos/${REPO}/actions/artifacts/${id}" || true
+            done

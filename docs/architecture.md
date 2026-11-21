@@ -4,7 +4,7 @@
 
 ```
                  +-------------------------------+
-                 |  Atlas3 / AtlasClient         |
+                 |  OhdsiAtlasClient / AtlasClient         |
                  |  URL, auth, resources, call   |
                  +---------------+---------------+
                                  |
@@ -33,7 +33,7 @@
 ## Python layout
 
 ```
-src/atlas3/
+src/ohdsi_atlas_client/
   client.py          AtlasClient, login, resources, request/call
   discovery.py       URL candidates, /info, version gate
   credentials.py     keyring + 0600 JSON fallback
@@ -51,14 +51,14 @@ src/atlas3/
 
 ```
 R/
-  atlas3-client.R        Atlas3 R6 class, connectAtlas, login, request
-  atlas3-discovery.R     URL candidates, /info, version gate
-  atlas3-credentials.R   keyring + 0600 JSON fallback
-  atlas3-http.R          httr2 transport, retry policy, errors
-  atlas3-endpoints.R     catalog loader + generic invoker
-  atlas3-bundle.R        cohort definition set schema + helpers
-  atlas3-resources.R     resource R6 classes
-  atlas3-utils.R         URL/version/hash helpers
+  ohdsiAtlasClient-client.R        OhdsiAtlasClient R6 class, connectAtlas, login, request
+  ohdsiAtlasClient-discovery.R     URL candidates, /info, version gate
+  ohdsiAtlasClient-credentials.R   keyring + 0600 JSON fallback
+  ohdsiAtlasClient-http.R          httr2 transport, retry policy, errors
+  ohdsiAtlasClient-endpoints.R     catalog loader + generic invoker
+  ohdsiAtlasClient-bundle.R        cohort definition set schema + helpers
+  ohdsiAtlasClient-resources.R     resource R6 classes
+  ohdsiAtlasClient-utils.R         URL/version/hash helpers
 inst/extdata/endpoints.json
 tests/testthat/
 vignettes/
@@ -68,15 +68,15 @@ vignettes/
 
 | Condition | Python | R |
 |---|---|---|
-| Invalid config | `ConfigurationError` | `atlas3_configuration_error` |
-| No WebAPI found | `DiscoveryError` | `atlas3_discovery_error` |
-| WebAPI < 3.0 | `UnsupportedVersionError` | `atlas3_unsupported_version_error` |
-| Bad key | `AuthenticationError` | `atlas3_authentication_error` |
-| No permission | `PermissionDeniedError` | `atlas3_permission_error` |
-| Missing resource | `NotFoundError` | `atlas3_not_found_error` |
-| Conflict | `ConflictError` | `atlas3_conflict_error` |
-| Server error | `ServerError` | `atlas3_server_error` |
-| Bad bundle | `BundleError` | `atlas3_bundle_error` |
+| Invalid config | `ConfigurationError` | `ohdsi_atlas_client_configuration_error` |
+| No WebAPI found | `DiscoveryError` | `ohdsi_atlas_client_discovery_error` |
+| WebAPI < 3.0 | `UnsupportedVersionError` | `ohdsi_atlas_client_unsupported_version_error` |
+| Bad key | `AuthenticationError` | `ohdsi_atlas_client_authentication_error` |
+| No permission | `PermissionDeniedError` | `ohdsi_atlas_client_permission_error` |
+| Missing resource | `NotFoundError` | `ohdsi_atlas_client_not_found_error` |
+| Conflict | `ConflictError` | `ohdsi_atlas_client_conflict_error` |
+| Server error | `ServerError` | `ohdsi_atlas_client_server_error` |
+| Bad bundle | `BundleError` | `ohdsi_atlas_client_bundle_error` |
 
 All HTTP errors expose the status, method, URL, and a safe server message.
 Headers and credentials are never included in exception text.

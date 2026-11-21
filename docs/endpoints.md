@@ -4,7 +4,7 @@ Both packages ship the same endpoint catalog: **344 operations** from WebAPI
 3.0.0 (branch `3.0-dev`), generated from the Spring controllers and verified
 against a live deployment. The catalog is checked into both packages:
 
-* `python/src/atlas3/data/endpoints.json`
+* `python/src/ohdsi_atlas_client/data/endpoints.json`
 * `r/inst/extdata/endpoints.json`
 
 Run `python scripts/sync_endpoints.py` after updating either copy; CI verifies
@@ -33,7 +33,7 @@ that they are identical and that the count is 344.
 | `job` | 6 | job list, executions, lookup by name |
 | `tool` | 5 | ATLAS tools |
 | `notifications` | 3 | job notifications |
-| `ddl` | 3 | CDM and Achilles DDL |
+| `ddl` | 3 | results, Achilles, and negative-control DDL |
 | `cache` | 2 | cache info and clear |
 | `statistic` | 2 | execution and access statistics |
 | `auth` | 1 | enabled auth providers |
@@ -45,6 +45,48 @@ that they are identical and that the count is 344.
 The high-level clients authenticate with API keys only. The catalog still
 contains WebAPI's login and provider endpoints for completeness and for raw
 `request()` calls, but neither package implements password or JWT login.
+
+## Typed coverage
+
+A typed method exists for most day-to-day resources; the rest is reachable
+through `call()` and `request()`, which work for **all 344 operations**.
+
+Rather than quote a number that drifts every time a method is added, the
+[API reference](reference.md) is generated from source and lists every typed
+method in both languages, plus the differences between them.
+
+Qualitatively:
+
+* **Fully typed in both languages**: `tag`, `tool`, `notifications`, `cache`,
+  `sqlrender`, `statistic`, `ddl`, `job`, `cdmresults` (core subset),
+  `source`, `cohortdefinition` (except protected tags), `conceptset` (core
+  CRUD, versions, plus annotations in Python).
+* **Mostly typed**: `vocabulary`, `feature-analysis`, `permission`.
+* **Partly typed**: `cohort-characterization`, `pathway-analysis`, `reusable`
+  (they share one analysis class, which covers CRUD, versions, tags,
+  generation, exports, and results, but not every report), `ir` (design and
+  execution are typed; most results endpoints are not), `evidence`,
+  `role`, `user`.
+* **Not typed at all**: `cohortsample`, `featureextraction`, `person`, and
+  login endpoints.
+
+### Known gaps
+
+* **`ddl`**: WebAPI 3.0 has **no `/ddl/cdm`**. It cannot emit CDM DDL. The
+  three real endpoints all target a *results* schema and return plain SQL
+  text. Both clients send `Accept: text/plain` for these; a request that
+  advertises only `application/json` gets HTTP 500. Use
+  `CommonDataModel::writeDdl()` (R) or the released DDL scripts for the CDM.
+* **`cohortsample`** and **`featureextraction`**: no typed methods; use
+  `call()`.
+* **`vocabulary`**: descendant-of-ancestor, related-standard, and
+  compare-arbitrary have no wrapper.
+* **`evidence`**: drug-label bulk search and several negative-control
+  endpoints are untyped.
+* **Protected tags** on `conceptset` and `cohortdefinition`: untyped.
+* **`user`/`role`/`permission`**: role and permission editing is only partly
+  typed. **Login endpoints are deliberately untyped**: the clients support API
+  keys only and must not invite password login.
 
 ## Core recipes
 
@@ -109,7 +151,7 @@ atlas$jobs$wait(job, timeout = 600)
 The typed methods cover the common resources. The catalog covers everything:
 
 ```python
-atlas.endpoints.describe()
+print(atlas.endpoints.describe())
 atlas.call("cohortdefinition.getInclusionRuleReport",
            id=1, sourceKey="EUNOMIA", mode=0)
 atlas.request("GET", "/cohortdefinition/1/info")
@@ -117,6 +159,7 @@ atlas.request("GET", "/cohortdefinition/1/info")
 
 ```r
 length(atlas$endpoints())
+vapply(atlas$endpoints(), `[[`, "", "operationId")
 atlas$call("cohortdefinition.getInclusionRuleReport",
            id = 1, sourceKey = "EUNOMIA", mode = 0)
 atlas$request("GET", "/cohortdefinition/1/info")
@@ -126,8 +169,12 @@ Operation IDs are `group.controllerMethod`, for example
 `cohortdefinition.generateCohort`, `cdmresults.getConceptRecordCount`,
 `conceptset.createConceptSet`. There are three `/vocabulary/{sourceKey}/search`
 variants; the GET-with-query variant is `vocabulary.executeSearch.3`. Use
-`atlas.endpoints(group="vocabulary")` / `atlas$endpoints(group = "vocabulary")`
-to discover IDs.
+`atlas.endpoints.find(group="vocabulary")` in Python or
+`atlas$endpoints(group = "vocabulary")` in R to discover IDs.
+
+Note that `query` is a real WebAPI parameter name. In R, `atlas$call(...)` sends
+`query="aspirin"` as `?query=aspirin` (a list is treated as extra query-string
+parameters instead).
 
 ## WebAPI 3.0 quirks
 
@@ -146,6 +193,7 @@ These were observed on the reference stack and are handled or documented:
 | Concept-set and cohort concept-set ZIP exports can be slow (tens of seconds) | Use the typed exports with a longer timeout when needed. |
 | No native cohort definition set | Client-side bundle; see [cohort-sets.md](cohort-sets.md). |
 | `/conceptset/exportlist` uses `+`-joined IDs | `export_list_zip()` builds the separator. |
+| DDL endpoints return `text/plain`, not JSON | DDL methods send `Accept: text/plain`. |
 | `/sqlrender/translate` uses `resultSchema`? | It returns `targetSQL`; use the typed method. |
 
 ## Catalog maintenance

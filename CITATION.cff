@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-message: "If you use the Atlas3 clients in research, please cite this repository."
-title: "Atlas3 clients: Python and R clients for OHDSI ATLAS 3.0"
+message: "If you use the OhdsiAtlasClient clients in research, please cite this repository."
+title: "OhdsiAtlasClient clients: Python and R clients for OHDSI ATLAS 3.0"
 abstract: >-
   Modern, aligned Python and R clients for the OHDSI ATLAS 3.0 and WebAPI 3.0
   REST API, with URL discovery, personal API-key authentication, cohort
@@ -9,7 +9,7 @@ authors:
   - family-names: "Gilbert"
     given-names: "Jamie"
     email: "gilbert@ohdsi.org"
-repository-code: "https://github.com/OHDSI/Atlas3Clients"
+repository-code: "https://github.com/OHDSI/OhdsiAtlasClient"
 license: Apache-2.0
 version: 0.1.0
 date-released: "2026-10-28"

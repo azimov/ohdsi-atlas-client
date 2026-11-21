@@ -3,14 +3,14 @@ name: Endpoint parity
 on:
   push:
     paths:
-      - "python/src/atlas3/data/endpoints.json"
-      - "r/inst/extdata/endpoints.json"
+      - "ohdsi-atlas-client/src/ohdsi_atlas_client/data/endpoints.json"
+      - "OhdsiAtlasClient/inst/extdata/endpoints.json"
       - "scripts/**"
       - ".github/workflows/endpoint-parity.yml"
   pull_request:
     paths:
-      - "python/src/atlas3/data/endpoints.json"
-      - "r/inst/extdata/endpoints.json"
+      - "ohdsi-atlas-client/src/ohdsi_atlas_client/data/endpoints.json"
+      - "OhdsiAtlasClient/inst/extdata/endpoints.json"
       - "scripts/**"
       - ".github/workflows/endpoint-parity.yml"
 

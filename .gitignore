@@ -27,6 +27,8 @@ r/.quarto/
 docs/_site/
 _site/
 pkgdown/
+# pkgdown output for the R package (see r/_pkgdown.yml)
+r/docs/
 
 # OS / editors
 .DS_Store

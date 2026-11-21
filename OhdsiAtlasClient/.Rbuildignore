@@ -1,0 +1,15 @@
+^\.Rproj\.user$
+^\.github$
+^extras$
+^README\.Rmd$
+^\.lintr$
+^\.pre-commit-config\.yaml$
+^_pkgdown\.yml$
+^pkgdown$
+^docs$
+^\.DS_Store$
+^deploy\.sh$
+^compare_versions$
+^\.roundhouseai$
+^\.claude$
+^\.vscode$

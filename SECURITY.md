@@ -19,11 +19,11 @@ within five business days.
   until the key is revoked or expires.
 * The clients never write keys to logs, exception messages, or telemetry.
 * Python stores keys in the OS keyring when `keyring` is installed, otherwise
-  in the platform config directory (`platformdirs.user_config_dir("atlas3")`) with mode `0600`.
+  in the platform config directory (`platformdirs.user_config_dir("ohdsi_atlas_client")`) with mode `0600`.
 * R stores keys in the OS keyring when the optional `keyring` package is
-  installed, otherwise in `tools::R_user_dir("Atlas3", "config")` with mode
+  installed, otherwise in `tools::R_user_dir("OhdsiAtlasClient", "config")` with mode
   `0600`.
-* `ATLAS3_API_KEY` is supported for CI. Prefer short-lived keys in CI.
+* `OHDSI_ATLAS_CLIENT_API_KEY` is supported for CI. Prefer short-lived keys in CI.
 * Use `atlas.logout(revoke=True)` / `atlas$logout(revoke = TRUE)` to revoke the
   key server-side and remove it locally.
 

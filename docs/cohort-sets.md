@@ -16,7 +16,7 @@ implement the same documented bundle format on top of the per-asset endpoints.
 
 ## Format
 
-Format name: `atlas3.cohort-definition-set`
+Format name: `ohdsi-atlas-client.cohort-definition-set`
 
 Format version: `1.0`
 
@@ -24,11 +24,11 @@ Media type: `application/json` (a `.zip` or directory is a convenience wrapper)
 
 ```json
 {
-  "format": "atlas3.cohort-definition-set",
+  "format": "ohdsi-atlas-client.cohort-definition-set",
   "formatVersion": "1.0",
   "createdAt": "2026-10-28T12:00:00Z",
   "generator": {
-    "name": "atlas3-python",
+    "name": "ohdsi-atlas-client-python",
     "version": "0.1.0"
   },
   "atlas": {

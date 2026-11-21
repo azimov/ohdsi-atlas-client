@@ -1,0 +1,35 @@
+#!/bin/bash
+# Compares the package version in DESCRIPTION with the most recent Git tag.
+#
+# Usage: ./compare_versions
+#
+# Prints "new" when DESCRIPTION holds a version newer than every vX.Y.Z tag,
+# which is what the release workflow keys off. Copied shape from the HADES
+# release process (see https://ohdsi.github.io/Hades/releaseProcess.html).
+
+PACKAGE_DIR="${PACKAGE_DIR:-OhdsiAtlasClient}"
+
+DESCRIPTION_VERSION=$(grep '^Version:' "${PACKAGE_DIR}/DESCRIPTION" | sed 's/Version: *//' | tr -d '\r')
+
+if [ -z "$DESCRIPTION_VERSION" ]; then
+  echo "error: could not read Version from ${PACKAGE_DIR}/DESCRIPTION" >&2
+  exit 1
+fi
+
+LATEST_TAG=$(git tag --list 'v*' --sort=-v:refname | head -n 1)
+
+if [ -z "$LATEST_TAG" ]; then
+  # No releases yet: the first tagged version is always new.
+  echo "new"
+  exit 0
+fi
+
+LATEST_VERSION="${LATEST_TAG#v}"
+
+if [ "$DESCRIPTION_VERSION" = "$LATEST_VERSION" ]; then
+  echo "same"
+elif printf '%s\n%s\n' "$LATEST_VERSION" "$DESCRIPTION_VERSION" | sort -V -C; then
+  echo "new"
+else
+  echo "old"
+fi

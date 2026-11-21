@@ -13,8 +13,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def check_catalogs() -> list[str]:
     errors: list[str] = []
-    python = ROOT / "python" / "src" / "atlas3" / "data" / "endpoints.json"
-    r = ROOT / "r" / "inst" / "extdata" / "endpoints.json"
+    python = ROOT / "ohdsi-atlas-client" / "src" / "ohdsi_atlas_client" / "data" / "endpoints.json"
+    r = ROOT / "OhdsiAtlasClient" / "inst" / "extdata" / "endpoints.json"
     if not python.exists() or not r.exists():
         errors.append("Endpoint catalog is missing from one of the packages")
         return errors

@@ -1,0 +1,24 @@
+# Lint configuration following the OHDSI/HADES R code style guide:
+# https://ohdsi.github.io/Hades/codeStyle.html
+#
+# Run with: lintr::lint_package()
+
+linters: linters_with_defaults(
+  # HADES style: 100 characters, camelCase, <- for assignment.
+  line_length_linter = line_length_linter(100),
+  object_name_linter = object_name_linter(styles = c("camelCase", "snake_case", "symbols")),
+  assignment_linter = assignment_linter(operator = "<-"),
+  # OHDSI code does not require explicit return() in every function.
+  return_linter = NULL,
+  # Commented code is common in HADES extras/ scripts.
+  commented_code_linter = NULL,
+  # Single quotable names in NSE contexts (R6 private/provided fields) are fine.
+  object_usage_linter = NULL,
+  # Files carry the Apache header at the top.
+  todo_comment_linter = NULL
+)
+
+exclusions: list(
+  "extras",
+  "tests/testthat/helper-fake-webapi.R"
+)

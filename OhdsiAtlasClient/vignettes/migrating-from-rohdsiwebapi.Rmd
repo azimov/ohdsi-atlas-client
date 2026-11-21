@@ -1,0 +1,383 @@
+---
+title: "Migrating from ROhdsiWebApi"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Migrating from ROhdsiWebApi}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+# Who this is for
+
+You have working R code that talks to ATLAS through
+[`ROhdsiWebApi`](https://ohdsi.github.io/ROhdsiWebApi/) and you want the same
+workflows against **ATLAS 3.0 / WebAPI 3.0** with **OhdsiAtlasClient**.
+
+## OhdsiAtlasClient is the successor to ROhdsiWebApi
+
+`OhdsiAtlasClient` is intended to replace `ROhdsiWebApi` as the R client for
+ATLAS. The two packages do not overlap:
+
+* **`ROhdsiWebApi` supports ATLAS 2.x and stays available for it.** Existing
+  scripts keep working against ATLAS 2.x deployments; nothing here forces a
+  migration on you today.
+* **`OhdsiAtlasClient` supports ATLAS 3.0 and later.** It cannot talk to
+  ATLAS 2.x, and `ROhdsiWebApi` cannot talk to ATLAS 3.0.
+
+So you migrate when your ATLAS instance is upgraded, and the two packages sit
+alongside each other only for as long as you run both server versions. The
+intent is that this guide becomes unnecessary once ATLAS 2.x is retired.
+
+`OhdsiAtlasClient` is not a drop-in replacement: it is a different API for a
+different server. Most functions have a direct counterpart, but you should read
+[The three changes that bite](#the-three-changes-that-bite) before you start,
+because they affect almost every script.
+
+## Which package should I use?
+
+| Your ATLAS | Use |
+|---|---|
+| 2.x | `ROhdsiWebApi` (unchanged) |
+| 3.0 or later | `OhdsiAtlasClient` (this package) |
+| Migrating 2.x -> 3.0 | Both, briefly: run this guide, then drop `ROhdsiWebApi` |
+
+# The three changes that bite
+
+## 1. Authentication: credentials became API keys
+
+`ROhdsiWebApi` logs in with a database (or AD/Windows) username and password and
+keeps a bearer token per `baseUrl`:
+
+```{r, eval = FALSE}
+ROhdsiWebApi::authorizeWebApi(
+  baseUrl        = "https://atlas.example.org/WebAPI",
+  authMethod     = "db",
+  webApiUsername = "myuser",
+  webApiPassword = "mypassword"
+)
+```
+
+ATLAS 3.0 uses **personal API keys**. There is no password login in OhdsiAtlasClient, and
+no `authorizeWebApi()`:
+
+```{r, eval = FALSE}
+library(OhdsiAtlasClient)
+
+atlas <- connectAtlas(
+  "https://atlas.example.org",
+  apiKey = Sys.getenv("OHDSI_ATLAS_CLIENT_API_KEY")
+)
+```
+
+Create the key once in ATLAS: user menu -> **API keys**. The plaintext is shown
+once. Store it in `OHDSI_ATLAS_CLIENT_API_KEY` (or call `atlas$login(key)` to persist it in
+the OS keyring).
+
+Removals to expect: `authorizeWebApi()`, `setAuthHeader()` and any
+`webApiUsername` / `webApiPassword` argument. If a script relied on a shared
+service account, each caller now needs their own key.
+
+## 2. You hold a client object instead of passing `baseUrl`
+
+`ROhdsiWebApi` takes `baseUrl` on **every** call:
+
+```{r, eval = FALSE}
+cohorts <- ROhdsiWebApi::getCohortDefinitionsMetaData(baseUrl)
+cohort  <- ROhdsiWebApi::getCohortDefinition(cohortId = 1, baseUrl = baseUrl)
+```
+
+OhdsiAtlasClient builds one object that carries the URL, the key, and the version check.
+`baseUrl` goes away from every call:
+
+```{r, eval = FALSE}
+cohorts <- atlas$cohorts$list()
+cohort  <- atlas$cohorts$get(1)
+```
+
+The upshot for scripts: delete the `baseUrl` plumbing, and pass `atlas`
+instead.
+
+## 3. Only WebAPI 3.0 is supported
+
+`connectAtlas()` calls `/info` and refuses servers older than 3.0. There is no
+"best effort" mode against WebAPI 2.x. If you still need ATLAS 2.x, keep using
+`ROhdsiWebApi`.
+
+```{r, eval = FALSE}
+atlas$version   # "3.0.0" or newer
+```
+
+# Function-by-function mapping
+
+## Connection and sources
+
+| ROhdsiWebApi | OhdsiAtlasClient |
+|---|---|
+| `authorizeWebApi(baseUrl, "db", user, pw)` | `connectAtlas(url, apiKey = key)` |
+| `getWebApiVersion(baseUrl)` | `atlas$version` |
+| `getCdmSources(baseUrl)` | `atlas$sources$list()` |
+| `getPriorityVocabularyKey(baseUrl)` | `atlas$sources$priorityVocabulary()` |
+| `isValidSourceKey(ids, baseUrl)` | compare against `atlas$sources$list()` |
+| `getPersonProfile(baseUrl, sourceKey, personId)` | `atlas$request("GET", ...)`, see below |
+
+```{r, eval = FALSE}
+sources <- atlas$sources$list()
+vapply(sources, `[[`, "", "sourceKey")
+# [1] "EUNOMIA"
+```
+
+## Concepts
+
+| ROhdsiWebApi | OhdsiAtlasClient |
+|---|---|
+| `getConcepts(conceptIds, baseUrl, vocabularySourceKey)` | `atlas$concepts$getMany(sourceKey, conceptIds)` |
+| `getSourceConcepts(conceptIds, baseUrl, vocabularySourceKey)` | `atlas$concepts$getMany(sourceKey, ids)` |
+| `resolveConceptSet(definition, baseUrl, vocabularySourceKey)` | `atlas$concepts$resolve(sourceKey, expression)` |
+| `convertConceptSetDefinitionToTable(definition)` | `atlas$conceptSets$items(id)`, or see below |
+
+Two differences matter here.
+
+**`snakeCaseToCamelCase` is gone.** `ROhdsiWebApi` could return either
+`concept_id` or `conceptId` depending on that flag. OhdsiAtlasClient always returns the
+server's own camelCase field names (`conceptId`, `conceptName`).
+
+**Concept-set definitions are now expressions.** `resolveConceptSet()` returned
+an expanded set of *concept rows*. OhdsiAtlasClient's `resolve()` takes and returns the
+Circe **expression** (items with `includeDescendants`, `isExcluded`, and so
+on). If you need the expanded rows, ask for items and inspect them:
+
+```{r, eval = FALSE}
+expression <- atlas$conceptSets$expression(conceptSetId)
+items      <- atlas$conceptSets$items(conceptSetId)
+included   <- atlas$concepts$countIncluded(sourceKey, expression)
+```
+
+## Concept sets
+
+| ROhdsiWebApi | OhdsiAtlasClient |
+|---|---|
+| `getConceptSetDefinitionsMetaData(baseUrl)` | `atlas$conceptSets$list()` |
+| `getConceptSetDefinition(id, baseUrl)` | `atlas$conceptSets$get(id)` |
+| `getConceptSetDefinitionBySourceKey(id, baseUrl, sourceKey)` | `atlas$conceptSets$expression(id)` |
+| `postConceptSetDefinition(name, def, baseUrl)` | `atlas$conceptSets$create(name, expression)` |
+| `updateConceptSetDefinition(def, baseUrl)` | `atlas$conceptSets$update(id, ...)` |
+| `deleteConceptSetDefinition(id, baseUrl)` | `atlas$conceptSets$delete(id)` |
+| `existsConceptSetName(name, baseUrl)` | `atlas$conceptSets$exists(name)` |
+| `detectConceptSetsByName(pattern, baseUrl)` | `atlas$conceptSets$list()` + `grepl()` |
+
+```{r, eval = FALSE}
+conceptSet <- atlas$conceptSets$createFromConcepts(
+  "Diclofenac", c(1124300),
+  sourceKey = "EUNOMIA", includeDescendants = TRUE
+)
+```
+
+`createFromConcepts()` is new: it builds the expression for you from concept
+IDs, which `ROhdsiWebApi` did not do.
+
+## Cohorts
+
+This is where most code lives. The mapping is close, but watch the arguments.
+
+| ROhdsiWebApi | OhdsiAtlasClient |
+|---|---|
+| `getCohortDefinitionsMetaData(baseUrl)` | `atlas$cohorts$list()` |
+| `getCohortDefinition(cohortId, baseUrl)` | `atlas$cohorts$get(id)` |
+| `getCohortDefinitionExpression(cohortId, baseUrl)` | `atlas$cohorts$expression(id)` |
+| `getCohortDefinitionName(baseUrl, id)` | `atlas$cohorts$get(id)$name` |
+| `getCohortSql(def, baseUrl, generateStats)` | `atlas$cohorts$sql(expression)` |
+| `postCohortDefinition(name, def, baseUrl)` | `atlas$cohorts$create(name, expression)` |
+| `updateCohortDefinition(def, baseUrl)` | `atlas$cohorts$update(id, ...)` |
+| `deleteCohortDefinition(cohortId, baseUrl)` | `atlas$cohorts$delete(id)` |
+| `existsCohortName(name, baseUrl)` | `atlas$cohorts$exists(name)` |
+| `detectCohortsByName(pattern, baseUrl)` | `atlas$cohorts$list()` + `grepl()` |
+| `isValidCohortId(ids, baseUrl)` | `atlas$cohorts$list()` + `%in%` |
+| `invokeCohortGeneration(id, baseUrl, sourceKey)` | `atlas$cohorts$generate(id, sourceKey)` |
+| `cancelCohortGeneration(id, baseUrl, sourceKey)` | `atlas$cohorts$cancel(id, sourceKey)` |
+| `getCohortGenerationInformation(id, baseUrl)` | `atlas$cohorts$generationInfo(id)` |
+| `getCohortInclusionRulesAndCounts(baseUrl, id, sourceKey)` | `atlas$cohorts$inclusionReport(id, sourceKey)` |
+| `getCohortResults(cohortId, baseUrl)` | query the `cohort` table yourself, see below |
+
+Three gotchas:
+
+* **Argument order changed.** `getCohortInclusionRulesAndCounts()` took
+  `baseUrl` *first*; `inclusionReport()` takes the cohort id first. Named
+  arguments keep you honest; positional ones will not.
+* **`generateStats` is gone** from the SQL call. Use `check()` to validate
+  before generating.
+* **There is no `getCohortResults()`.** Cohort *membership* is written to the
+  CDM results schema by the generation job; WebAPI exposes the counts, not the
+  rows. Connect to the database for that:
+
+```{r, eval = FALSE}
+connection <- DatabaseConnector::connect(...)
+counts <- DatabaseConnector::querySql(
+  connection,
+  "SELECT cohort_definition_id, COUNT(*) AS n
+     FROM results.cohort GROUP BY cohort_definition_id"
+)
+```
+
+## Generating and waiting
+
+`ROhdsiWebApi` returned a job id and left you to poll. OhdsiAtlasClient returns a job
+object you can wait on:
+
+```{r, eval = FALSE}
+job <- atlas$cohorts$generate(cohortId, "EUNOMIA")
+job <- atlas$jobs$wait(job, timeout = 600)
+```
+
+`wait()` polls until the job finishes and signals an error on failure.
+
+## Exporting a cohort definition set
+
+`ROhdsiWebApi::exportCohortDefinitionSet()` returned a tibble of
+`atlasId, cohortId, cohortName, sql, json, logicDescription, generateStats`.
+OhdsiAtlasClient uses a portable **bundle** (cohorts + embedded concept sets + SHA-256
+digest) that can also be imported into another instance:
+
+```{r, eval = FALSE}
+bundle <- atlas$cohortSets$export(c(1, 2), path = "my-cohorts.json")
+result <- atlas$cohortSets$import("my-cohorts.json", onConflict = "rename")
+```
+
+If you need the old tibble shape, build it from the bundle:
+
+```{r, eval = FALSE}
+bundle <- atlas$cohortSets$export(ids = c(1, 2))
+cohortDefinitionSet <- data.frame(
+  atlasId    = vapply(bundle$cohorts, function(x) x$id, numeric(1)),
+  cohortId   = vapply(bundle$cohorts, function(x) x$id, numeric(1)),
+  cohortName = vapply(bundle$cohorts, function(x) x$name, character(1))
+)
+```
+
+See `vignette("ohdsi_atlas_client", package = "OhdsiAtlasClient")` and the "Cohort definition sets"
+article for the full format.
+
+## Analyses: estimation, prediction, characterization, incidence rates
+
+| ROhdsiWebApi | OhdsiAtlasClient |
+|---|---|
+| `getEstimationDefinitionsMetaData(baseUrl)` | `atlas$cohortCharacterizations$list()`, see note |
+| `getCharacterizationDefinitionsMetaData(baseUrl)` | `atlas$cohortCharacterizations$list()` |
+| `postIncidenceRateDefinition(...)` | `atlas$incidenceRates$create()` |
+| `invokeIncidenceRateGeneration(...)` | `atlas$incidenceRates$generate()` |
+| `getIncidenceRateResults(...)` | `atlas$incidenceRates$report()` |
+
+> **Note.** ATLAS 3.0 has **no estimation or patient-level prediction
+> resources**. Those analyses are not available through WebAPI at all; run them
+> in R with the HADES packages. OhdsiAtlasClient cannot map the `*Estimation*` or
+> `*Prediction*` functions because the endpoints do not exist on the server.
+
+## Importing definitions into a package
+
+| ROhdsiWebApi | OhdsiAtlasClient |
+|---|---|
+| `insertCohortDefinitionInPackage(...)` | `atlas$cohorts$export(...)` + `CohortGenerator::createCohortDefinitionSet()` |
+| `insertCohortDefinitionSetInPackage(...)` | same, from a bundle |
+
+These write `inst/sql/sql_server` + `cohorts.csv` layouts used by
+`CohortGenerator`. OhdsiAtlasClient gives you the JSON and SQL; use
+`CohortGenerator` / `ResultModelManager` helpers to lay out the package.
+
+## Nothing maps cleanly
+
+Some `ROhdsiWebApi` functions have no counterpart. Use `call()` or `request()`
+with the WebAPI 3.0 path:
+
+| ROhdsiWebApi | Do this instead |
+|---|---|
+| `getPersonProfile(baseUrl, sourceKey, personId)` | `atlas$request("GET", paste0("/cdmresults/", sourceKey, "/person/", personId))` |
+| `createConceptSetWorkbook(...)` | read the workbook yourself, then `createFromConcepts()` |
+| `checkInputFileEncoding(...)` | not needed; OhdsiAtlasClient does not read workbooks |
+
+`call()` takes an operation ID from the bundled 344-operation catalog:
+
+```{r, eval = FALSE}
+vapply(atlas$endpoints(group = "cohortdefinition"), `[[`, "", "operationId")
+atlas$call("cohortdefinition.getCohortDefinitionRaw", id = 1)
+atlas$request("GET", "/cohortdefinition/1/info")
+```
+
+# A worked migration
+
+The same task in both packages: find a cohort by name, generate it, and wait.
+
+Before, with `ROhdsiWebApi`:
+
+```{r, eval = FALSE}
+library(ROhdsiWebApi)
+
+baseUrl <- "https://atlas.example.org/WebAPI"
+ROhdsiWebApi::authorizeWebApi(baseUrl, "db", user, password)
+
+found <- ROhdsiWebApi::detectCohortsByName("Type 2 diabetes", baseUrl = baseUrl)
+cohortId <- found[[1]]$id
+
+ROhdsiWebApi::invokeCohortGeneration(cohortId, baseUrl, sourceKey = "EUNOMIA")
+
+repeat {
+  info <- ROhdsiWebApi::getCohortGenerationInformation(cohortId, baseUrl)
+  if (info[[1]]$status %in% c("COMPLETE", "FAILED")) break
+  Sys.sleep(5)
+}
+info[[1]]$personCount
+```
+
+After, with `OhdsiAtlasClient`:
+
+```{r, eval = FALSE}
+library(OhdsiAtlasClient)
+
+atlas <- connectAtlas(
+  "https://atlas.example.org",
+  apiKey = Sys.getenv("OHDSI_ATLAS_CLIENT_API_KEY")
+)
+
+cohorts <- atlas$cohorts$list()
+matched <- Filter(function(x) grepl("Type 2 diabetes", x$name), cohorts)
+cohortId <- matched[[1]]$id
+
+job <- atlas$cohorts$generate(cohortId, "EUNOMIA")
+job <- atlas$jobs$wait(job, timeout = 600)
+
+info <- atlas$cohorts$generationInfo(cohortId)
+info[[1]]$personCount
+```
+
+Notice what disappeared: `baseUrl` on every call, the login block, and the
+hand-rolled polling loop.
+
+# Migration checklist
+
+1. Create an API key in ATLAS and export `OHDSI_ATLAS_CLIENT_API_KEY`.
+2. Replace the `authorizeWebApi()` block with one `connectAtlas()` at the top
+   of the script.
+3. Delete every `baseUrl = ...` argument.
+4. Replace `getXxx()` calls using the tables above; prefer named arguments.
+5. Replace `snakeCaseToCamelCase = FALSE` code paths by adjusting field names
+   to camelCase.
+6. Replace `resolveConceptSet()` with `concepts$resolve()` and check whether
+   you actually wanted expanded rows (`conceptSets$items()`).
+7. Replace `exportCohortDefinitionSet()` with `cohortSets$export()`.
+8. Replace manual polling with `jobs$wait()`.
+9. Remove estimation/prediction calls; they have no WebAPI 3.0 equivalent.
+10. Re-run in a test instance before pointing at production.
+
+# See also
+
+* `vignette("ohdsi_atlas_client", package = "OhdsiAtlasClient")` - the getting-started vignette.
+* `?connectAtlas` - connection, discovery, and key handling.
+* The Python/R parity and endpoint-coverage articles on the documentation site.

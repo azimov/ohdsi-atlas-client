@@ -14,8 +14,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PY_CATALOG = ROOT / "python" / "src" / "atlas3" / "data" / "endpoints.json"
-R_CATALOG = ROOT / "r" / "inst" / "extdata" / "endpoints.json"
+PY_CATALOG = ROOT / "ohdsi-atlas-client" / "src" / "ohdsi_atlas_client" / "data" / "endpoints.json"
+R_CATALOG = ROOT / "OhdsiAtlasClient" / "inst" / "extdata" / "endpoints.json"
 EXPECTED_OPERATIONS = 344
 
 

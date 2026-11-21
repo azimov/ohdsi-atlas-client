@@ -1,0 +1,69 @@
+url: https://ohdsi.github.io/OhdsiAtlasClient/r/
+
+# The R package's pkgdown site is built into r/docs and published from there.
+# The repository's shared docs/ directory is hand-written Markdown for the
+# combined Python + R site; they are deliberately separate.
+destination: docs
+
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#1f4e79"
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github]
+  components:
+    intro:
+      text: Get started
+      href: articles/ohdsi_atlas_client.html
+    articles:
+      text: Articles
+      menu:
+        - text: Getting started
+          href: articles/ohdsi_atlas_client.html
+        - text: Migrating from ROhdsiWebApi
+          href: articles/migrating-from-rohdsiwebapi.html
+
+home:
+  links:
+    - text: Python client (ohdsi-atlas-client)
+      href: https://pypi.org/project/ohdsi-atlas-client/
+
+reference:
+  - title: Connect
+    desc: >
+      Discover a WebAPI root from an ATLAS URL, check the version, and
+      authenticate with a personal API key.
+    contents:
+      - connectAtlas
+      - discoverAtlas
+      - ohdsiAtlasClientNormalizeUrl
+      - ohdsiAtlasClientCandidateApiBases
+      - ohdsiAtlasClientParseVersion
+      - ohdsiAtlasClientVersionAtLeast
+      - ohdsiAtlasClientRedactKey
+  - title: Endpoint catalog
+    desc: >
+      Reach any of the 344 WebAPI 3.0 operations, including those without a
+      typed method.
+    contents:
+      - ohdsiAtlasClientEndpoints
+      - ohdsiAtlasClientCallEndpoint
+  - title: Cohort definition sets
+    desc: >
+      Export cohort definitions and their embedded concept sets to a portable
+      bundle, and import them into another instance.
+    contents:
+      - ohdsiAtlasClientBundleFromCohorts
+      - ohdsiAtlasClientBundleSave
+      - ohdsiAtlasClientBundleLoad
+      - ohdsiAtlasClientBundleValidate
+
+articles:
+  - title: Guides
+    navbar: ~
+    contents:
+      - ohdsi_atlas_client
+      - migrating-from-rohdsiwebapi

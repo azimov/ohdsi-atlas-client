@@ -1,0 +1,171 @@
+---
+title: "Getting started with OhdsiAtlasClient"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Getting started with OhdsiAtlasClient}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE, comment = "#>")
+```
+
+# Overview
+
+`OhdsiAtlasClient` is an R client for OHDSI ATLAS 3.0 and WebAPI 3.0. It discovers the
+WebAPI root from an ATLAS URL, checks the server version, authenticates with a
+personal API key, and gives typed access to sources, vocabularies, concept
+sets, cohort definitions, cohort definition sets, CDM results, jobs, and
+analysis resources.
+
+Every endpoint in WebAPI 3.0 is also reachable through `call()` and
+`request()`, so a missing convenience method never blocks you.
+
+> **Coming from `ROhdsiWebApi`?** Read
+> `vignette("migrating-from-rohdsiwebapi", package = "OhdsiAtlasClient")` instead. It maps
+> every function you are likely to be using.
+
+# Connecting
+
+```{r, eval = FALSE}
+library(OhdsiAtlasClient)
+
+atlas <- connectAtlas("https://atlas.example.org")
+atlas
+```
+
+Discovery tries the common layouts: `/WebAPI`, `/webapi`, a direct WebAPI
+root, and `/atlas/WebAPI`. The client refuses WebAPI 2.x.
+
+If ATLAS and WebAPI are served on **different ports or hosts** (common in
+development stacks, where the UI is at `:8081` and WebAPI at `:8082`), same-origin
+discovery cannot succeed. Pass the WebAPI root directly:
+
+```{r, eval = FALSE}
+atlas <- connectAtlas("http://localhost:8082/WebAPI")
+```
+
+# Authenticating
+
+Authentication uses a personal API key. Create one in ATLAS under the user
+menu -> **API keys**; the plaintext is shown once.
+
+```{r, eval = FALSE}
+atlas <- connectAtlas(
+  "https://atlas.example.org",
+  apiKey = Sys.getenv("OHDSI_ATLAS_CLIENT_API_KEY")
+)
+
+# Or connect first and store a key:
+atlas <- connectAtlas("https://atlas.example.org")
+atlas$login(Sys.getenv("OHDSI_ATLAS_CLIENT_API_KEY"))
+atlas$whoami()$user$login
+```
+
+A key is looked up in this order: the `apiKey` argument, the
+`OHDSI_ATLAS_CLIENT_API_KEY` environment variable, then a stored key (OS keyring, or a
+permission-restricted file). There is no username/password login.
+
+# Sources and vocabulary
+
+```{r, eval = FALSE}
+sources <- atlas$sources$list()
+vapply(sources, `[[`, "", "sourceKey")
+
+concepts <- atlas$concepts$search("EUNOMIA", "diclofenac", rows = 10)
+concept <- atlas$concepts$get("EUNOMIA", 1124300)
+```
+
+`rows` is applied client-side: WebAPI's search can ignore it, so the client
+truncates the result.
+
+# Concept counts
+
+Counts come from the CDM results cache (Achilles). The canonical path is
+`cdmResults$conceptCounts()`; `concepts$counts()` is an alias.
+
+```{r, eval = FALSE}
+counts <- atlas$cdmResults$conceptCounts("EUNOMIA", c(1124300))
+counts[[1]]$values    # record, descendant record, person, descendant person
+```
+
+If Achilles has not run against a source, every value is `0` even when the CDM
+has data.
+
+# Concept sets
+
+```{r, eval = FALSE}
+conceptSet <- atlas$conceptSets$createFromConcepts(
+  "Diclofenac ingredients", c(1124300),
+  sourceKey = "EUNOMIA", includeDescendants = TRUE
+)
+expression <- atlas$conceptSets$expression(conceptSet$id)
+resolved <- atlas$concepts$resolve("EUNOMIA", expression)
+```
+
+# Cohort definitions
+
+```{r, eval = FALSE}
+demo <- atlas$cohorts$get(1)
+cohort <- atlas$cohorts$create("My cohort", demo$expression)
+atlas$cohorts$check(cohort$expression)
+atlas$cohorts$sql(cohort$expression)
+
+job <- atlas$cohorts$generate(cohort$id, "EUNOMIA")
+job <- atlas$jobs$wait(job, timeout = 600)
+```
+
+# Cohort definition sets
+
+A cohort definition set bundle contains cohort expressions and all embedded
+concept sets, with a SHA-256 integrity digest. It can be imported into another
+ATLAS instance.
+
+```{r, eval = FALSE}
+atlas$cohortSets$export(path = "my-cohorts.json")
+result <- atlas$cohortSets$import("my-cohorts.json", onConflict = "rename")
+result$createdCohorts
+```
+
+`onConflict` is one of `"error"`, `"skip"`, `"rename"` (default), or
+`"update"`. Use `dryRun = TRUE` to see the plan without writing.
+
+# Schema DDL
+
+WebAPI 3.0 emits DDL only for *results* schemas, not for the CDM itself, and
+the endpoints require an admin key.
+
+```{r, eval = FALSE}
+atlas$ddl$results(dialect = "postgresql", schema = "results")
+atlas$ddl$achilles(dialect = "postgresql", schema = "results")
+atlas$ddl$cemResults(dialect = "postgresql", schema = "results")
+```
+
+For CDM DDL use `CommonDataModel::writeDdl()`.
+
+# Every endpoint
+
+The bundled catalog contains all 344 WebAPI 3.0 operations. The typed methods
+cover the common resources; `call()` and `request()` reach the rest.
+
+```{r, eval = FALSE}
+vapply(atlas$endpoints(group = "cohortdefinition"), `[[`, "", "operationId")
+atlas$call("cohortdefinition.getCohortDefinitionRaw", id = 1)
+atlas$request("GET", "/cohortdefinition/1/info")
+```
+
+# Where to go next
+
+* `vignette("migrating-from-rohdsiwebapi", package = "OhdsiAtlasClient")` - coming from
+  `ROhdsiWebApi`.
+* `?connectAtlas`, `?discoverAtlas`, `?ohdsiAtlasClientEndpoints`, `?ohdsiAtlasClientCallEndpoint`
+* The online documentation site for recipes, parity, and endpoint coverage.
+
+# Session information
+
+```{r}
+sessionInfo()
+```
